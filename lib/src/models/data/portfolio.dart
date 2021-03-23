@@ -1,3 +1,4 @@
+import 'from_json.dart';
 import 'portfolio_position.dart';
 
 class Portfolio {
@@ -6,10 +7,7 @@ class Portfolio {
   Portfolio(this.positions);
 
   factory Portfolio.fromJson(Map<String, dynamic> data) => Portfolio(
-        (data['positions'] as List)
-            .cast<Map<String, dynamic>>()
-            .map((d) => PortfolioPosition.fromJson(d))
-            .toList(),
+        listFromJson(data, 'positions', (d) => PortfolioPosition.fromJson(d)),
       );
 
   @override

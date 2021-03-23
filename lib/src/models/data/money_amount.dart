@@ -7,7 +7,7 @@ class MoneyAmount {
   MoneyAmount(this.currency, this.value);
 
   factory MoneyAmount.fromJson(Map<String, dynamic> data) => MoneyAmount(
-        const CurrencyConverter().convert(data['currency'] as String),
+        currencyFromJson(data),
         data['value'] as double,
       );
 

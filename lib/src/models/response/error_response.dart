@@ -21,10 +21,10 @@ class ErrorData {
 
   ErrorData(this.code, this.message);
 
-  factory ErrorData.fromJson(Map<String, dynamic> map) {
+  factory ErrorData.fromJson(Map<String, dynamic> data) {
     return ErrorData(
-      map['code'] as String,
-      map['message'] as String,
+      data['code'] as String,
+      data['message'] as String,
     );
   }
 
