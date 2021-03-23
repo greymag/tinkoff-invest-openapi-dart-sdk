@@ -1,11 +1,10 @@
 import 'package:tinkoff_invest/src/models/data/data.dart';
 
-class PortfolioResponse {
-  final String trackingId;
-  final String status;
-  final Portfolio payload;
+import 'response.dart';
 
-  PortfolioResponse(this.trackingId, this.status, this.payload);
+class PortfolioResponse extends StdResponse<Portfolio> {
+  PortfolioResponse(String trackingId, String status, Portfolio payload)
+      : super(trackingId, status, payload);
 
   factory PortfolioResponse.fromJson(Map<String, dynamic> data) =>
       PortfolioResponse(
