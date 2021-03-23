@@ -13,6 +13,6 @@ class TIPortfolioEndpoint extends TIEndpoint {
   Future<Result<PortfolioResponse>> load([String? brokerAccountId]) async {
     final params =
         brokerAccountId != null ? {'brokerAccountId': brokerAccountId} : null;
-    return get((d) => PortfolioResponse.fromJson(d), params);
+    return get((d) => PortfolioResponse.fromJson(d), params: params);
   }
 }

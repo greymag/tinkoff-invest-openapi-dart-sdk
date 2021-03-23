@@ -20,19 +20,25 @@ abstract class TIEndpoint {
   /// will be returned.
   @protected
   Future<Result<T>> get<T>(T Function(Map<String, dynamic> data) fromMap,
-      [Map<String, dynamic>? params]) async {
+      {String? path, Map<String, dynamic>? params}) async {
     return _request(
       (path) => dio.get(path, queryParameters: params),
       fromMap,
+      subpath: path,
     );
   }
 
   Future<Result<T>> _request<T>(
       Future<Response<Map<String, dynamic>>> Function(String path) perform,
-      T Function(Map<String, dynamic> data) fromMap) async {
-    final path = endpoint;
+      T Function(Map<String, dynamic> data) fromMap,
+      {String? subpath}) async {
+    final path = StringBuffer(endpoint);
+    if (subpath != null) {
+      path..write('/')..write(subpath);
+    }
+
     try {
-      final response = await perform(path);
+      final response = await perform(path.toString());
 
       final data = response.data;
       if (data != null) {
