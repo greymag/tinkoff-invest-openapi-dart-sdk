@@ -53,7 +53,7 @@ abstract class TIEndpoint {
         final parsed = ErrorResponse.fromJson(errorResponse);
         return Result.error(parsed);
       } else {
-        return Result.error('Failed to parse response');
+        return Result.error('Failed to parse error response');
       }
     }
   }

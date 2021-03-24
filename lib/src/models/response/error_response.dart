@@ -11,7 +11,7 @@ class ErrorResponse extends StdResponse<ErrorData> {
       );
 
   @override
-  String toString() => 'PortfolioResponse(trackingId: $trackingId, '
+  String toString() => 'ErrorResponse(trackingId: $trackingId, '
       'status: $status, payload: $payload)';
 }
 
