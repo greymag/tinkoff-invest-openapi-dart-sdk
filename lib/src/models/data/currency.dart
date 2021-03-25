@@ -21,3 +21,8 @@ class CurrencyConverter {
 Currency currencyFromJson(Map<String, dynamic> data,
         [String key = _defaultCurrencyKey]) =>
     const CurrencyConverter().fromJson(data, key);
+
+extension CurrencyFromJsonExtension on Map<String, dynamic> {
+  Currency requireCurrency([String key = _defaultCurrencyKey]) =>
+      const CurrencyConverter().fromJson(this, key);
+}

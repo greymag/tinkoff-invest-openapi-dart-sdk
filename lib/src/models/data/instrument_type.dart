@@ -1,5 +1,7 @@
 enum InstrumentType { stock, currency, bond, etf }
 
+const _defaultInstrumentTypeKey = 'instrumentType';
+
 class InstrumentTypeConverter {
   static const _data = <String, InstrumentType>{
     'Stock': InstrumentType.stock,
@@ -11,4 +13,20 @@ class InstrumentTypeConverter {
   const InstrumentTypeConverter();
 
   InstrumentType convert(String value) => _data[value]!;
+
+  InstrumentType fromJson(Map<String, dynamic> data,
+          [String key = _defaultInstrumentTypeKey]) =>
+      convert(data[key] as String);
+}
+
+extension InstrumentTypeFromJsonExtension on Map<String, dynamic> {
+  InstrumentType requireInstrumentType(
+          [String key = _defaultInstrumentTypeKey]) =>
+      const InstrumentTypeConverter().fromJson(this, key);
+
+  InstrumentType? optionalInstrumentType(
+          [String key = _defaultInstrumentTypeKey]) =>
+      this[key] != null
+          ? const InstrumentTypeConverter().fromJson(this, key)
+          : null;
 }
