@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:tinkoff_invest/src/models/data/data.dart';
 import 'package:tinkoff_invest/src/models/response/error_response.dart';
 
 class ErrorResponseMatcher extends Matcher {
@@ -42,6 +43,47 @@ class ErrorResponseMatcher extends Matcher {
       if (item.status != status) 'status',
       if (item.payload.code != code) 'payload.code',
       if (item.payload.message != message) 'payload.message',
+    ];
+
+    return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
+  }
+}
+
+class CurrencyPositionMatcher extends Matcher {
+  final Currency currency;
+  final double balance;
+  final double? blocked;
+
+  CurrencyPositionMatcher(this.currency, this.balance, [this.blocked]);
+
+  @override
+  Description describe(Description description) {
+    return description
+        .add('CurrencyPosition:<CurrencyPosition(currency: $currency, '
+            'balance: $balance, blocked: $blocked)>');
+  }
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    if (item is! CurrencyPosition) return false;
+
+    return item.currency == currency &&
+        item.balance == balance &&
+        item.blocked == blocked;
+  }
+
+  @override
+  Description describeMismatch(Object? item, Description mismatchDescription,
+      Map matchState, bool verbose) {
+    if (item is! CurrencyPosition) {
+      return mismatchDescription
+          .add("is not an instance of 'CurrencyPosition'");
+    }
+
+    final mismatch = <String>[
+      if (item.currency != currency) 'currency',
+      if (item.balance != balance) 'balance',
+      if (item.blocked != blocked) 'blocked',
     ];
 
     return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
