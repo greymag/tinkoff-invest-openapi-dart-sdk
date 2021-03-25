@@ -57,4 +57,7 @@ abstract class TIEndpoint {
       }
     }
   }
+
+  @protected
+  String dateParam(DateTime value) => value.toUtc().toIso8601String();
 }
