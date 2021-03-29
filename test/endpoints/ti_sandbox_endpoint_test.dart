@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_sandbox_endpoint.dart';
 import 'package:tinkoff_invest/src/models/data/data.dart';
+import 'package:tinkoff_invest/src/models/response/empty_response.dart';
 import 'package:tinkoff_invest/src/models/response/sandbox_register_response.dart';
 
 import 'dio_mock.dart';
@@ -22,6 +23,27 @@ void main() {
       expect(data.status, 'Ok');
       expect(data.payload.brokerAccountType, BrokerAccountType.tinkoff);
       expect(data.payload.brokerAccountId, 'SB2936272');
+    });
+
+    // TODO: test that request with POST method
+
+    // TODO: test fail
+  });
+
+  group('currenciesBalance()', () {
+    test('should return EmptyResponse on success', () async {
+      const response =
+          '{"trackingId":"61cb1f0496add949","payload":{},"status":"Ok"}';
+      final endpoint = TISandboxEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.currenciesBalance(Currency.USD, 150);
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<EmptyResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, '61cb1f0496add949');
+      expect(data.status, 'Ok');
     });
 
     // TODO: test that request with POST method

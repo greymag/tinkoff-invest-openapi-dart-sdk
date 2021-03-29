@@ -20,7 +20,7 @@ abstract class TIEndpoint {
   /// will be returned.
   @protected
   Future<Result<T>> get<T>(T Function(Map<String, dynamic> data) fromMap,
-      {String? path, Map<String, dynamic>? params}) async {
+      {String? path, Map<String, Object>? params}) async {
     return _request(
       (path) => dio.get(path, queryParameters: params),
       fromMap,
@@ -40,8 +40,8 @@ abstract class TIEndpoint {
   @protected
   Future<Result<T>> post<T>(T Function(Map<String, dynamic> data) fromMap,
       {String? path,
-      Map<String, dynamic>? data,
-      Map<String, dynamic>? queryParams}) async {
+      Map<String, Object>? data,
+      Map<String, Object>? queryParams}) async {
     return _request(
       (path) => dio.post(path, data: data, queryParameters: queryParams),
       fromMap,
