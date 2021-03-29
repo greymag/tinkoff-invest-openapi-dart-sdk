@@ -4,6 +4,8 @@ import 'package:tinkoff_invest/src/endpoints/ti_endpoint.dart';
 import 'package:tinkoff_invest/src/models/response/operations_response.dart';
 
 /// Endpoint /operations
+///
+/// Получение информации по операциям.
 class TIOperationsEndpoint extends TIEndpoint {
   TIOperationsEndpoint(Dio dio) : super(dio, 'operations');
 

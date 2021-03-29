@@ -5,6 +5,8 @@ import 'package:tinkoff_invest/src/models/response/portfolio_currencies_response
 import 'package:tinkoff_invest/src/models/response/portfolio_response.dart';
 
 /// Endpoint /portfolio
+///
+/// Операции с портфелем пользователя.
 class TIPortfolioEndpoint extends TIEndpoint {
   TIPortfolioEndpoint(Dio dio) : super(dio, 'portfolio');
 
