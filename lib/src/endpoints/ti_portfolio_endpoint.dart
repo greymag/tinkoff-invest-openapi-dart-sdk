@@ -14,8 +14,7 @@ class TIPortfolioEndpoint extends TIEndpoint {
   ///
   /// [brokerAccountId] Номер счета (по умолчанию - Тинькофф).
   Future<Result<PortfolioResponse>> load([String? brokerAccountId]) async {
-    final params =
-        brokerAccountId != null ? {'brokerAccountId': brokerAccountId} : null;
+    final params = optionalAccountIdParams(brokerAccountId);
     return get((d) => PortfolioResponse.fromJson(d), params: params);
   }
 
@@ -24,8 +23,7 @@ class TIPortfolioEndpoint extends TIEndpoint {
   /// [brokerAccountId] Номер счета (по умолчанию - Тинькофф).
   Future<Result<PortfolioCurrenciesResponse>> currencies(
       [String? brokerAccountId]) async {
-    final params =
-        brokerAccountId != null ? {'brokerAccountId': brokerAccountId} : null;
+    final params = optionalAccountIdParams(brokerAccountId);
     return get((d) => PortfolioCurrenciesResponse.fromJson(d),
         path: 'currencies', params: params);
   }

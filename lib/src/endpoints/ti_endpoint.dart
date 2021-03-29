@@ -81,4 +81,8 @@ abstract class TIEndpoint {
 
   @protected
   String dateParam(DateTime value) => value.toUtc().toIso8601String();
+
+  @protected
+  Map<String, Object>? optionalAccountIdParams(String? brokerAccountId) =>
+      brokerAccountId != null ? {'brokerAccountId': brokerAccountId} : null;
 }
