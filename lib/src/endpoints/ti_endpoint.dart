@@ -28,6 +28,27 @@ abstract class TIEndpoint {
     );
   }
 
+  /// Makes POST request and returns parsed result.
+  ///
+  /// [data] will be passed as POST body and
+  /// [queryParams] will be passed as parameters in uri.
+  ///
+  /// If result can't be parsed then [ErrorResult] will be returned.
+  /// If request fails then [ErrorResult] with [DioError] will be returned.
+  /// If request got error responses then [ErrorResult] with [ErrorResponse]
+  /// will be returned.
+  @protected
+  Future<Result<T>> post<T>(T Function(Map<String, dynamic> data) fromMap,
+      {String? path,
+      Map<String, dynamic>? data,
+      Map<String, dynamic>? queryParams}) async {
+    return _request(
+      (path) => dio.post(path, data: data, queryParameters: queryParams),
+      fromMap,
+      subpath: path,
+    );
+  }
+
   Future<Result<T>> _request<T>(
       Future<Response<Map<String, dynamic>>> Function(String path) perform,
       T Function(Map<String, dynamic> data) fromMap,
