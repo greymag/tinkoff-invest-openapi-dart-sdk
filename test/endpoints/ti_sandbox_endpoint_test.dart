@@ -40,7 +40,7 @@ void main() {
 
     // TODO: test arguments
 
-    // TODO: test fail
+    _testFail((endpoint) => endpoint.currenciesBalance(Currency.RUB, 150));
   });
 
   group('positionsBalance()', () {
@@ -76,12 +76,12 @@ void main() {
 
     // TODO: test arguments
 
-    // TODO: test fail
+    _testFail((endpoint) => endpoint.remove());
   });
 }
 
 void _testEmptyResposeSuccess(
-    Future<Result<EmptyResponse>> Function(TISandboxEndpoint sandbox) act) {
+    Future<Result<EmptyResponse>> Function(TISandboxEndpoint endpoint) act) {
   test('should return EmptyResponse on success', () async {
     const response =
         '{"trackingId":"61cb1f0496add949","payload":{},"status":"Ok"}';
@@ -95,5 +95,25 @@ void _testEmptyResposeSuccess(
     final data = res.asValue!.value;
     expect(data.trackingId, '61cb1f0496add949');
     expect(data.status, 'Ok');
+  });
+}
+
+void _testFail(
+    Future<Result<EmptyResponse>> Function(TISandboxEndpoint endpoint) act) {
+  test('should return ErrorResponse on fail', () async {
+    const response =
+        '{"trackingId":"45da497ceb1c056e","payload":{"message":"Broker account not found for type=Tinkoff","code":"USER_ERROR"},"status":"Error"}';
+    final endpoint = TISandboxEndpoint(dioForError(response));
+
+    final res = await act(endpoint);
+
+    expect(res.isValue, false);
+    expect(
+        res.asError!.error,
+        ErrorResponseMatcher(
+          trackingId: '45da497ceb1c056e',
+          message: 'Broker account not found for type=Tinkoff',
+          code: 'USER_ERROR',
+        ));
   });
 }
