@@ -78,6 +78,16 @@ void main() {
 
     _testFail((endpoint) => endpoint.remove());
   });
+
+  group('clear()', () {
+    _testEmptyResposeSuccess((endpoint) => endpoint.clear());
+
+    // TODO: test that request with POST method
+
+    // TODO: test arguments
+
+    _testFail((endpoint) => endpoint.clear());
+  });
 }
 
 void _testEmptyResposeSuccess(
