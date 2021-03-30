@@ -5,6 +5,7 @@ import 'package:tinkoff_invest/src/models/response/empty_response.dart';
 import 'package:tinkoff_invest/src/models/response/sandbox_register_response.dart';
 
 import 'dio_mock.dart';
+import 'matchers.dart';
 
 void main() {
   group('register()', () {
@@ -48,6 +49,46 @@ void main() {
 
     // TODO: test that request with POST method
 
+    // TODO: test arguments
+
     // TODO: test fail
+  });
+
+  group('positionsBalance()', () {
+    test('should return EmptyResponse on success', () async {
+      const response =
+          '{"trackingId":"61cb1f0496add349","payload":{},"status":"Ok"}';
+      final endpoint = TISandboxEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.positionsBalance('demo', 10);
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<EmptyResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, '61cb1f0496add349');
+      expect(data.status, 'Ok');
+    });
+
+    // TODO: test that request with POST method
+
+    // TODO: test arguments
+
+    test('should return ErrorResponse on fail', () async {
+      const response =
+          ' {"trackingId":"a91e78b9492ea43e","payload":{"message":"Cannot find security by id demo","code":"INSTRUMENT_ERROR"},"status":"Error"}';
+      final endpoint = TISandboxEndpoint(dioForError(response));
+
+      final res = await endpoint.positionsBalance('demo', 10);
+
+      expect(res.isValue, false);
+      expect(
+          res.asError!.error,
+          ErrorResponseMatcher(
+            trackingId: 'a91e78b9492ea43e',
+            message: 'Cannot find security by id demo',
+            code: 'INSTRUMENT_ERROR',
+          ));
+    });
   });
 }

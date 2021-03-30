@@ -33,4 +33,19 @@ class TISandboxEndpoint extends TIEndpoint {
       queryParams: optionalAccountIdParams(brokerAccountId),
     );
   }
+
+  /// Выставление баланса по инструментным позициям.
+  ///
+  /// [brokerAccountId] Номер счета (по умолчанию - Тинькофф).
+  Future<Result<EmptyResponse>> positionsBalance(String figi, double balance,
+      [String? brokerAccountId]) {
+    return voidPost(
+      path: 'positions/balance',
+      data: <String, Object>{
+        'figi': figi,
+        'balance': balance,
+      },
+      queryParams: optionalAccountIdParams(brokerAccountId),
+    );
+  }
 }
