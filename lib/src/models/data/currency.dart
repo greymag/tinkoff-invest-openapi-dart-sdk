@@ -28,6 +28,11 @@ Currency currencyFromJson(Map<String, dynamic> data,
 extension CurrencyFromJsonExtension on Map<String, dynamic> {
   Currency requireCurrency([String key = _defaultCurrencyKey]) =>
       const CurrencyConverter().fromJson(this, key);
+
+  Currency? optionalCurrency([String key = _defaultCurrencyKey]) {
+    final val = this[key] as String?;
+    return val == null ? null : const CurrencyConverter().convert(val);
+  }
 }
 
 extension CurrencyExtension on Currency {
