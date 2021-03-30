@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:test/test.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_sandbox_endpoint.dart';
 import 'package:tinkoff_invest/src/models/data/data.dart';
@@ -32,20 +33,8 @@ void main() {
   });
 
   group('currenciesBalance()', () {
-    test('should return EmptyResponse on success', () async {
-      const response =
-          '{"trackingId":"61cb1f0496add949","payload":{},"status":"Ok"}';
-      final endpoint = TISandboxEndpoint(dioForSuccess(response));
-
-      final res = await endpoint.currenciesBalance(Currency.USD, 150);
-
-      expect(res.isValue, true);
-      expect(res.asValue!.value, isA<EmptyResponse>());
-
-      final data = res.asValue!.value;
-      expect(data.trackingId, '61cb1f0496add949');
-      expect(data.status, 'Ok');
-    });
+    _testEmptyResposeSuccess(
+        (endpoint) => endpoint.currenciesBalance(Currency.USD, 150));
 
     // TODO: test that request with POST method
 
@@ -55,20 +44,8 @@ void main() {
   });
 
   group('positionsBalance()', () {
-    test('should return EmptyResponse on success', () async {
-      const response =
-          '{"trackingId":"61cb1f0496add349","payload":{},"status":"Ok"}';
-      final endpoint = TISandboxEndpoint(dioForSuccess(response));
-
-      final res = await endpoint.positionsBalance('demo', 10);
-
-      expect(res.isValue, true);
-      expect(res.asValue!.value, isA<EmptyResponse>());
-
-      final data = res.asValue!.value;
-      expect(data.trackingId, '61cb1f0496add349');
-      expect(data.status, 'Ok');
-    });
+    _testEmptyResposeSuccess(
+        (endpoint) => endpoint.positionsBalance('demo', 10));
 
     // TODO: test that request with POST method
 
@@ -90,5 +67,23 @@ void main() {
             code: 'INSTRUMENT_ERROR',
           ));
     });
+  });
+}
+
+void _testEmptyResposeSuccess(
+    Future<Result<EmptyResponse>> Function(TISandboxEndpoint sandbox) act) {
+  test('should return EmptyResponse on success', () async {
+    const response =
+        '{"trackingId":"61cb1f0496add949","payload":{},"status":"Ok"}';
+    final endpoint = TISandboxEndpoint(dioForSuccess(response));
+
+    final res = await act(endpoint);
+
+    expect(res.isValue, true);
+    expect(res.asValue!.value, isA<EmptyResponse>());
+
+    final data = res.asValue!.value;
+    expect(data.trackingId, '61cb1f0496add949');
+    expect(data.status, 'Ok');
   });
 }
