@@ -68,6 +68,16 @@ void main() {
           ));
     });
   });
+
+  group('remove()', () {
+    _testEmptyResposeSuccess((endpoint) => endpoint.remove());
+
+    // TODO: test that request with POST method
+
+    // TODO: test arguments
+
+    // TODO: test fail
+  });
 }
 
 void _testEmptyResposeSuccess(

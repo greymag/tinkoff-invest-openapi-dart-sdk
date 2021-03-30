@@ -48,4 +48,14 @@ class TISandboxEndpoint extends TIEndpoint {
       queryParams: optionalAccountIdParams(brokerAccountId),
     );
   }
+
+  /// Удаление счета клиента.
+  ///
+  /// [brokerAccountId] Номер счета (по умолчанию - Тинькофф).
+  Future<Result<EmptyResponse>> remove([String? brokerAccountId]) {
+    return voidPost(
+      path: 'remove',
+      queryParams: optionalAccountIdParams(brokerAccountId),
+    );
+  }
 }
