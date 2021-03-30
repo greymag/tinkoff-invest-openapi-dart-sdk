@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:tinkoff_invest/src/endpoints/ti_market_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_operations_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_portfolio_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_sandbox_endpoint.dart';
@@ -16,6 +17,7 @@ class TinkoffInvestApi {
 
   TISandboxEndpoint? _sandboxEndpoint;
   TIPortfolioEndpoint? _portfolioEndpoint;
+  TIMarketEndpoint? _marketEndpoint;
   TIOperationsEndpoint? _operationsEndpoint;
 
   TinkoffInvestApi(
@@ -68,6 +70,10 @@ class TinkoffInvestApi {
   /// Операции с портфелем пользователя.
   TIPortfolioEndpoint get portfolio =>
       _portfolioEndpoint ??= TIPortfolioEndpoint(_getDio());
+
+  /// Получении информации по бумагам.
+  TIMarketEndpoint get market =>
+      _marketEndpoint ??= TIMarketEndpoint(_getDio());
 
   /// Получении информации по операциям.
   TIOperationsEndpoint get operations =>
