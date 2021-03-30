@@ -24,8 +24,7 @@ class TISandboxEndpoint extends TIEndpoint {
   Future<Result<EmptyResponse>> currenciesBalance(
       Currency currency, double balance,
       [String? brokerAccountId]) async {
-    return post(
-      (d) => EmptyResponse.fromJson(d),
+    return voidPost(
       path: 'currencies/balance',
       data: <String, Object>{
         'currency': currency.toJson(),

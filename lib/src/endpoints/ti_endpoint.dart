@@ -1,6 +1,7 @@
 import 'package:async/async.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:tinkoff_invest/src/models/response/empty_response.dart';
 import 'package:tinkoff_invest/src/models/response/error_response.dart';
 
 abstract class TIEndpoint {
@@ -48,6 +49,17 @@ abstract class TIEndpoint {
       subpath: path,
     );
   }
+
+  /// Post with empty response.
+  ///
+  /// See [post].
+  @protected
+  Future<Result<EmptyResponse>> voidPost(
+          {String? path,
+          Map<String, Object>? data,
+          Map<String, Object>? queryParams}) =>
+      post((d) => EmptyResponse.fromJson(d),
+          path: path, data: data, queryParams: queryParams);
 
   Future<Result<T>> _request<T>(
       Future<Response<Map<String, dynamic>>> Function(String path) perform,
