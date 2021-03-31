@@ -60,4 +60,61 @@ void main() {
 
     // TODO: test fail
   });
+
+  group('bonds()', () {
+    test('should return MarketInstrumentListResponse on success', () async {
+      const response =
+          '{"trackingId":"cf00b0e801014ec1","payload":{"instruments":[{"figi":"BBG00T22WKV5","ticker":"SU29013RMFS8","isin":"RU000A101KT1","minPriceIncrement":0.01,"faceValue":1000.0,"lot":1,"currency":"RUB","name":"ОФЗ 29013","type":"Bond"},{"figi":"XS2091668447","ticker":"XS2091668447","isin":"XS2091668447","minPriceIncrement":0.00125,"faceValue":1250.0,"lot":1,"currency":"USD","name":"BCS Structured Products 30dec2024","type":"Bond"},{"figi":"BBG00N8HZBK8","ticker":"CBOM0224EU","isin":"XS1951067039","minPriceIncrement":0.1,"faceValue":1000.0,"lot":1,"currency":"EUR","name":"Credit Bank of Moscow","type":"Bond"}],"total":3},"status":"Ok"}';
+      final endpoint = TIMarketEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.bonds();
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<MarketInstrumentListResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, 'cf00b0e801014ec1');
+      expect(data.status, 'Ok');
+      expect(data.payload.total, 3);
+      expect(data.payload.instruments.length, 3);
+      expect(
+          data.payload.instruments[0],
+          MarketInstrumentMatcher.bond(
+            figi: 'BBG00T22WKV5',
+            ticker: 'SU29013RMFS8',
+            isin: 'RU000A101KT1',
+            minPriceIncrement: 0.01,
+            // faceValue: 1000.0
+            lot: 1,
+            currency: Currency.RUB,
+            name: 'ОФЗ 29013',
+          ));
+      expect(
+          data.payload.instruments[1],
+          MarketInstrumentMatcher.bond(
+            figi: 'XS2091668447',
+            ticker: 'XS2091668447',
+            isin: 'XS2091668447',
+            minPriceIncrement: 0.00125,
+            // faceValue: 1250.0
+            lot: 1,
+            currency: Currency.USD,
+            name: 'BCS Structured Products 30dec2024',
+          ));
+      expect(
+          data.payload.instruments[2],
+          MarketInstrumentMatcher.bond(
+            figi: 'BBG00N8HZBK8',
+            ticker: 'CBOM0224EU',
+            isin: 'XS1951067039',
+            minPriceIncrement: 0.1,
+            // faceValue: 1000.0
+            lot: 1,
+            currency: Currency.EUR,
+            name: 'Credit Bank of Moscow',
+          ));
+    });
+
+    // TODO: test fail
+  });
 }

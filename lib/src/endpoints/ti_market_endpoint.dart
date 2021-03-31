@@ -13,4 +13,9 @@ class TIMarketEndpoint extends TIEndpoint {
   Future<Result<MarketInstrumentListResponse>> stocks() {
     return get((d) => MarketInstrumentListResponse.fromJson(d), path: 'stocks');
   }
+
+  /// Получение списка облигаций.
+  Future<Result<MarketInstrumentListResponse>> bonds() {
+    return get((d) => MarketInstrumentListResponse.fromJson(d), path: 'bonds');
+  }
 }
