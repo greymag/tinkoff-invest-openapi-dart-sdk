@@ -85,7 +85,7 @@ void main() {
             ticker: 'SU29013RMFS8',
             isin: 'RU000A101KT1',
             minPriceIncrement: 0.01,
-            // faceValue: 1000.0
+            faceValue: 1000.0,
             lot: 1,
             currency: Currency.RUB,
             name: 'ОФЗ 29013',
@@ -97,7 +97,7 @@ void main() {
             ticker: 'XS2091668447',
             isin: 'XS2091668447',
             minPriceIncrement: 0.00125,
-            // faceValue: 1250.0
+            faceValue: 1250.0,
             lot: 1,
             currency: Currency.USD,
             name: 'BCS Structured Products 30dec2024',
@@ -109,7 +109,7 @@ void main() {
             ticker: 'CBOM0224EU',
             isin: 'XS1951067039',
             minPriceIncrement: 0.1,
-            // faceValue: 1000.0
+            faceValue: 1000.0,
             lot: 1,
             currency: Currency.EUR,
             name: 'Credit Bank of Moscow',

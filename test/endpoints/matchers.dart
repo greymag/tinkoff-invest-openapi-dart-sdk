@@ -95,6 +95,7 @@ class MarketInstrumentMatcher extends Matcher {
   final String ticker;
   final String? isin;
   final double? minPriceIncrement;
+  final double? faceValue;
   final int lot;
   final int? minQuantity;
   final Currency? currency;
@@ -105,6 +106,7 @@ class MarketInstrumentMatcher extends Matcher {
       {required this.figi,
       required this.ticker,
       this.isin,
+      this.faceValue,
       this.minPriceIncrement,
       required this.lot,
       this.minQuantity,
@@ -116,6 +118,7 @@ class MarketInstrumentMatcher extends Matcher {
       {required this.figi,
       required this.ticker,
       this.isin,
+      this.faceValue,
       this.minPriceIncrement,
       required this.lot,
       this.minQuantity,
@@ -127,6 +130,7 @@ class MarketInstrumentMatcher extends Matcher {
       {required this.figi,
       required this.ticker,
       this.isin,
+      this.faceValue,
       this.minPriceIncrement,
       required this.lot,
       this.minQuantity,
@@ -138,6 +142,7 @@ class MarketInstrumentMatcher extends Matcher {
       {required this.figi,
       required this.ticker,
       this.isin,
+      this.faceValue,
       this.minPriceIncrement,
       required this.lot,
       this.minQuantity,
@@ -149,6 +154,7 @@ class MarketInstrumentMatcher extends Matcher {
       {required this.figi,
       required this.ticker,
       this.isin,
+      this.faceValue,
       this.minPriceIncrement,
       required this.lot,
       this.minQuantity,
@@ -158,11 +164,11 @@ class MarketInstrumentMatcher extends Matcher {
 
   @override
   Description describe(Description description) {
-    return description.add(
-        'MarketInstrument:<MarketInstrument(figi: $figi, ticker: $ticker, isin: $isin, '
-        'minPriceIncrement: $minPriceIncrement, lot: $lot, '
-        'minQuantity: $minQuantity, currency: $currency, name: $name, '
-        'type: $type)>');
+    return description
+        .add('MarketInstrument:<MarketInstrument(figi: $figi, ticker: $ticker, '
+            'isin: $isin, minPriceIncrement: $minPriceIncrement, '
+            'faceValue: $faceValue, lot: $lot, minQuantity: $minQuantity, '
+            'currency: $currency, name: $name, type: $type)>');
   }
 
   @override
@@ -173,6 +179,7 @@ class MarketInstrumentMatcher extends Matcher {
         item.ticker == ticker &&
         item.isin == isin &&
         item.minPriceIncrement == minPriceIncrement &&
+        item.faceValue == faceValue &&
         item.lot == lot &&
         item.minQuantity == minQuantity &&
         item.currency == currency &&
@@ -193,6 +200,7 @@ class MarketInstrumentMatcher extends Matcher {
       if (item.ticker != ticker) 'ticker',
       if (item.isin != isin) 'isin',
       if (item.minPriceIncrement != minPriceIncrement) 'minPriceIncrement',
+      if (item.faceValue != faceValue) 'faceValue',
       if (item.lot != lot) 'lot',
       if (item.minQuantity != minQuantity) 'minQuantity',
       if (item.currency != currency) 'currency',

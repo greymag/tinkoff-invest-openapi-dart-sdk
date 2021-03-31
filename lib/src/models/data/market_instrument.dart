@@ -8,6 +8,9 @@ class MarketInstrument {
 
   /// Шаг цены.
   final double? minPriceIncrement;
+
+  /// Номинал для облигаций.
+  final double? faceValue;
   final int lot;
 
   /// Минимальное число инструментов для покупки должно быть не меньше,
@@ -17,15 +20,24 @@ class MarketInstrument {
   final String name;
   final InstrumentType type;
 
-  MarketInstrument(this.figi, this.ticker, this.isin, this.minPriceIncrement,
-      this.lot, this.minQuantity, this.currency, this.name, this.type);
+  MarketInstrument(
+      this.figi,
+      this.ticker,
+      this.isin,
+      this.minPriceIncrement,
+      this.faceValue,
+      this.lot,
+      this.minQuantity,
+      this.currency,
+      this.name,
+      this.type);
 
   @override
   String toString() {
     return 'MarketInstrument(figi: $figi, ticker: $ticker, isin: $isin, '
-        'minPriceIncrement: $minPriceIncrement, lot: $lot, '
-        'minQuantity: $minQuantity, currency: $currency, name: $name, '
-        'type: $type)';
+        'minPriceIncrement: $minPriceIncrement, faceValue: $faceValue, '
+        'lot: $lot, minQuantity: $minQuantity, currency: $currency, '
+        'name: $name, type: $type)';
   }
 
   factory MarketInstrument.fromJson(Map<String, dynamic> map) {
@@ -34,6 +46,7 @@ class MarketInstrument {
       map['ticker'] as String,
       map['isin'] as String?,
       map.optionalDouble('minPriceIncrement'),
+      map.optionalDouble('faceValue'),
       map.requireInt('lot'),
       map.optionalInt('minQuantity'),
       map.optionalCurrency(),
