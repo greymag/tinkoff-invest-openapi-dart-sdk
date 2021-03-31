@@ -23,4 +23,10 @@ class TIMarketEndpoint extends TIEndpoint {
   Future<Result<MarketInstrumentListResponse>> etfs() {
     return get((d) => MarketInstrumentListResponse.fromJson(d), path: 'etfs');
   }
+
+  /// Получение списка валютных пар.
+  Future<Result<MarketInstrumentListResponse>> currencies() {
+    return get((d) => MarketInstrumentListResponse.fromJson(d),
+        path: 'currencies');
+  }
 }

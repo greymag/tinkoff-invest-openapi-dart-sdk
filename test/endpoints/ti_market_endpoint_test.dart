@@ -117,6 +117,7 @@ void main() {
 
     // TODO: test fail
   });
+
   group('etfs()', () {
     test('should return MarketInstrumentListResponse on success', () async {
       const response =
@@ -165,6 +166,47 @@ void main() {
             lot: 1,
             currency: Currency.USD,
             name: 'Альфа-Капитал S&P 500',
+          ));
+    });
+
+    // TODO: test fail
+  });
+
+  group('currencies()', () {
+    test('should return MarketInstrumentListResponse on success', () async {
+      const response =
+          '{"trackingId":"9019eb4f65462ea8","payload":{"instruments":[{"figi":"BBG0013HGFT4","ticker":"USD000UTSTOM","minPriceIncrement":0.0025,"lot":1000,"currency":"RUB","name":"Доллар США","type":"Currency"},{"figi":"BBG0013HJJ31","ticker":"EUR_RUB__TOM","minPriceIncrement":0.0025,"lot":1000,"currency":"RUB","name":"Евро","type":"Currency"}],"total":2},"status":"Ok"}';
+      final endpoint = TIMarketEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.currencies();
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<MarketInstrumentListResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, '9019eb4f65462ea8');
+      expect(data.status, 'Ok');
+      expect(data.payload.total, 2);
+      expect(data.payload.instruments.length, 2);
+      expect(
+          data.payload.instruments[0],
+          MarketInstrumentMatcher.currency(
+            figi: 'BBG0013HGFT4',
+            ticker: 'USD000UTSTOM',
+            minPriceIncrement: 0.0025,
+            lot: 1000,
+            currency: Currency.RUB,
+            name: 'Доллар США',
+          ));
+      expect(
+          data.payload.instruments[1],
+          MarketInstrumentMatcher.currency(
+            figi: 'BBG0013HJJ31',
+            ticker: 'EUR_RUB__TOM',
+            minPriceIncrement: 0.0025,
+            lot: 1000,
+            currency: Currency.RUB,
+            name: 'Евро',
           ));
     });
 
