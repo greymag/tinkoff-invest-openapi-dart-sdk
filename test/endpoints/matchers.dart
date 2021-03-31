@@ -134,6 +134,17 @@ class MarketInstrumentMatcher extends Matcher {
       required this.name})
       : type = InstrumentType.bond;
 
+  MarketInstrumentMatcher.etf(
+      {required this.figi,
+      required this.ticker,
+      this.isin,
+      this.minPriceIncrement,
+      required this.lot,
+      this.minQuantity,
+      this.currency,
+      required this.name})
+      : type = InstrumentType.etf;
+
   @override
   Description describe(Description description) {
     return description.add(

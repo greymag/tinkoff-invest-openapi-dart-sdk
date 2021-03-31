@@ -117,4 +117,57 @@ void main() {
 
     // TODO: test fail
   });
+  group('etfs()', () {
+    test('should return MarketInstrumentListResponse on success', () async {
+      const response =
+          '{"trackingId":"410ead15ce71862c","payload":{"instruments":[{"figi":"BBG333333333","ticker":"TMOS","isin":"RU000A101X76","minPriceIncrement":0.002,"lot":1,"currency":"RUB","name":"Тинькофф iMOEX","type":"Etf"},{"figi":"BBG00M0DNJ69","ticker":"RU000A0JR282","isin":"RU000A0JR282","minPriceIncrement":0.05,"lot":100,"currency":"RUB","name":"ВТБ Капитал – Фонд Акций","type":"Etf"},{"figi":"BBG00P5M77Y0","ticker":"AKSP","isin":"RU000A1006V3","minPriceIncrement":0.01,"lot":1,"currency":"USD","name":"Альфа-Капитал S&P 500","type":"Etf"}],"total":3},"status":"Ok"}';
+      final endpoint = TIMarketEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.etfs();
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<MarketInstrumentListResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, '410ead15ce71862c');
+      expect(data.status, 'Ok');
+      expect(data.payload.total, 3);
+      expect(data.payload.instruments.length, 3);
+      expect(
+          data.payload.instruments[0],
+          MarketInstrumentMatcher.etf(
+            figi: 'BBG333333333',
+            ticker: 'TMOS',
+            isin: 'RU000A101X76',
+            minPriceIncrement: 0.002,
+            lot: 1,
+            currency: Currency.RUB,
+            name: 'Тинькофф iMOEX',
+          ));
+      expect(
+          data.payload.instruments[1],
+          MarketInstrumentMatcher.etf(
+            figi: 'BBG00M0DNJ69',
+            ticker: 'RU000A0JR282',
+            isin: 'RU000A0JR282',
+            minPriceIncrement: 0.05,
+            lot: 100,
+            currency: Currency.RUB,
+            name: 'ВТБ Капитал – Фонд Акций',
+          ));
+      expect(
+          data.payload.instruments[2],
+          MarketInstrumentMatcher.etf(
+            figi: 'BBG00P5M77Y0',
+            ticker: 'AKSP',
+            isin: 'RU000A1006V3',
+            minPriceIncrement: 0.01,
+            lot: 1,
+            currency: Currency.USD,
+            name: 'Альфа-Капитал S&P 500',
+          ));
+    });
+
+    // TODO: test fail
+  });
 }
