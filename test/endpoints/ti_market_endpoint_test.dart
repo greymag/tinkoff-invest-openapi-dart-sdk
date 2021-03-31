@@ -2,6 +2,7 @@ import 'package:test/test.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_market_endpoint.dart';
 import 'package:tinkoff_invest/src/models/data/data.dart';
 import 'package:tinkoff_invest/src/models/response/market_instrument_list_response.dart';
+import 'package:tinkoff_invest/src/models/response/orderbook_response.dart';
 
 import 'dio_mock.dart';
 import 'matchers.dart';
@@ -207,6 +208,73 @@ void main() {
             lot: 1000,
             currency: Currency.RUB,
             name: 'Евро',
+          ));
+    });
+
+    // TODO: test fail
+  });
+
+  group('orderbook()', () {
+    test('should return OrderbookResponse on success for not available',
+        () async {
+      const response =
+          '{"trackingId":"768a69ea957e159d","payload":{"figi":"BBG004S68758","depth":10,"tradeStatus":"NotAvailableForTrading","minPriceIncrement":0.5,"lastPrice":1632.5,"closePrice":1632.5,"bids":[],"asks":[]},"status":"Ok"}';
+      final endpoint = TIMarketEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.orderbook('BBG004S68758', 10);
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<OrderbookResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, '768a69ea957e159d');
+      expect(data.status, 'Ok');
+      expect(
+          data.payload,
+          OrderbookMatcher(
+            figi: 'BBG004S68758',
+            depth: 10,
+            tradeStatus: TradeStatus.notAvailableForTrading,
+            minPriceIncrement: 0.5,
+            lastPrice: 1632.5,
+            closePrice: 1632.5,
+            bids: [],
+            asks: [],
+          ));
+    });
+
+    test('should return OrderbookResponse on success for available', () async {
+      const response =
+          '{"trackingId":"6a20672862fdb760","payload":{"figi":"BBG000BPL8G3","depth":2,"tradeStatus":"NormalTrading","minPriceIncrement":0.01,"lastPrice":58.19,"closePrice":58.2,"limitUp":60.0,"limitDown":57,"bids":[{"price":58.18,"quantity":539},{"price":58.17,"quantity":156}],"asks":[{"price":58.2,"quantity":625},{"price":58.22,"quantity":7}]},"status":"Ok"}';
+      final endpoint = TIMarketEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.orderbook('BBG000BPL8G3', 2);
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<OrderbookResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, '6a20672862fdb760');
+      expect(data.status, 'Ok');
+      expect(
+          data.payload,
+          OrderbookMatcher(
+            figi: 'BBG000BPL8G3',
+            depth: 2,
+            tradeStatus: TradeStatus.normalTrading,
+            minPriceIncrement: 0.01,
+            lastPrice: 58.19,
+            closePrice: 58.2,
+            limitUp: 60.0,
+            limitDown: 57,
+            bids: [
+              OrderResponse(58.18, 539),
+              OrderResponse(58.17, 156),
+            ],
+            asks: [
+              OrderResponse(58.2, 625),
+              OrderResponse(58.22, 7),
+            ],
           ));
     });
 

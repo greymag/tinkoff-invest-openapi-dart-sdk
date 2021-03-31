@@ -203,3 +203,97 @@ class MarketInstrumentMatcher extends Matcher {
     return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
   }
 }
+
+class OrderbookMatcher extends Matcher {
+  final String figi;
+  final int depth;
+  final List<OrderResponse> bids;
+  final List<OrderResponse> asks;
+  final TradeStatus tradeStatus;
+  final double minPriceIncrement;
+  final double? faceValue;
+  final double? lastPrice;
+  final double? closePrice;
+  final double? limitUp;
+  final double? limitDown;
+
+  OrderbookMatcher({
+    required this.figi,
+    required this.depth,
+    required this.bids,
+    required this.asks,
+    required this.tradeStatus,
+    required this.minPriceIncrement,
+    this.faceValue,
+    this.lastPrice,
+    this.closePrice,
+    this.limitUp,
+    this.limitDown,
+  });
+
+  @override
+  Description describe(Description description) {
+    return description.add(
+        'Orderbook:<Orderbook(figi: $figi, depth: $depth, bids: $bids, '
+        'asks: $asks, tradeStatus: $tradeStatus, '
+        'minPriceIncrement: $minPriceIncrement, faceValue: $faceValue, '
+        'lastPrice: $lastPrice, closePrice: $closePrice, limitUp: $limitUp, '
+        'limitDown: $limitDown)>');
+  }
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    if (item is! Orderbook) return false;
+
+    return item.figi == figi &&
+        item.depth == depth &&
+        _isEquivivalent(item.bids, bids) &&
+        _isEquivivalent(item.asks, asks) &&
+        item.tradeStatus == tradeStatus &&
+        item.minPriceIncrement == minPriceIncrement &&
+        item.faceValue == faceValue &&
+        item.lastPrice == lastPrice &&
+        item.closePrice == closePrice &&
+        item.limitUp == limitUp &&
+        item.limitDown == limitDown;
+  }
+
+  @override
+  Description describeMismatch(Object? item, Description mismatchDescription,
+      Map matchState, bool verbose) {
+    if (item is! Orderbook) {
+      return mismatchDescription.add("is not an instance of 'Orderbook'");
+    }
+
+    final mismatch = <String>[
+      if (item.figi != figi) 'figi',
+      if (item.depth != depth) 'depth',
+      if (!_isEquivivalent(item.bids, bids)) 'bids',
+      if (!_isEquivivalent(item.asks, asks)) 'asks',
+      if (item.tradeStatus != tradeStatus) 'tradeStatus',
+      if (item.minPriceIncrement != minPriceIncrement) 'minPriceIncrement',
+      if (item.faceValue != faceValue) 'faceValue',
+      if (item.lastPrice != lastPrice) 'lastPrice',
+      if (item.closePrice != closePrice) 'closePrice',
+      if (item.limitUp != limitUp) 'limitUp',
+      if (item.limitDown != limitDown) 'limitDown',
+    ];
+
+    return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
+  }
+
+  bool _isEquivivalent(List<OrderResponse> a, List<OrderResponse> b) {
+    if (a.length != b.length) return false;
+
+    final s = b.toList();
+    for (final item in a) {
+      final index = s.indexWhere(
+          (e) => e.price == item.price && e.quantity == item.quantity);
+      if (index == -1) return false;
+
+      s.removeAt(index);
+    }
+
+    return true;
+  }
+}
