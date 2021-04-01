@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_market_endpoint.dart';
 import 'package:tinkoff_invest/src/models/data/data.dart';
+import 'package:tinkoff_invest/src/models/response/candles_response.dart';
 import 'package:tinkoff_invest/src/models/response/market_instrument_list_response.dart';
 import 'package:tinkoff_invest/src/models/response/orderbook_response.dart';
 
@@ -275,6 +276,54 @@ void main() {
               OrderResponse(58.2, 625),
               OrderResponse(58.22, 7),
             ],
+          ));
+    });
+
+    // TODO: test fail
+  });
+
+  group('candles()', () {
+    test('should return OrderbookResponse on success', () async {
+      const response =
+          '{"trackingId":"4ad6e79ee3f69d1c","payload":{"candles":[{"o":58.06,"c":58.06,"h":58.06,"l":58.06,"v":1,"time":"2021-04-01T10:00:00Z","interval":"30min","figi":"BBG000BPL8G3"},{"o":58.21,"c":58.21,"h":58.21,"l":58.21,"v":3,"time":"2021-04-01T15:30:00Z","interval":"30min","figi":"BBG000BPL8G3"}],"interval":"30min","figi":"BBG000BPL8G3"},"status":"Ok"}';
+      final endpoint = TIMarketEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.candles('BBG000BPL8G3', DateTime(2021, 4, 1),
+          DateTime(2021, 4, 2), CandleResolution.thirtyMin);
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<CandlesResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, '4ad6e79ee3f69d1c');
+      expect(data.status, 'Ok');
+
+      expect(data.payload.figi, 'BBG000BPL8G3');
+      expect(data.payload.interval, CandleResolution.thirtyMin);
+      expect(data.payload.candles.length, 2);
+
+      expect(
+          data.payload.candles[0],
+          CandleMatcher.thirtyMin(
+            figi: 'BBG000BPL8G3',
+            o: 58.06,
+            c: 58.06,
+            h: 58.06,
+            l: 58.06,
+            v: 1,
+            time: DateTime.utc(2021, 4, 1, 10).toLocal(),
+          ));
+
+      expect(
+          data.payload.candles[1],
+          CandleMatcher.thirtyMin(
+            figi: 'BBG000BPL8G3',
+            o: 58.21,
+            c: 58.21,
+            h: 58.21,
+            l: 58.21,
+            v: 3,
+            time: DateTime.utc(2021, 4, 1, 15, 30).toLocal(),
           ));
     });
 

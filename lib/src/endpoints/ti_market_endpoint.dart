@@ -1,8 +1,10 @@
 import 'package:async/async.dart';
 import 'package:dio/dio.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_endpoint.dart';
+import 'package:tinkoff_invest/src/models/response/candles_response.dart';
 import 'package:tinkoff_invest/src/models/response/market_instrument_list_response.dart';
 import 'package:tinkoff_invest/src/models/response/orderbook_response.dart';
+import 'package:tinkoff_invest/tinkoff_invest.dart';
 
 /// Endpoint /market
 ///
@@ -43,6 +45,26 @@ class TIMarketEndpoint extends TIEndpoint {
       params: <String, Object>{
         'figi': figi,
         'depth': depth,
+      },
+    );
+  }
+
+  /// Получение исторических свечей по FIGI.
+  ///
+  /// [figi] FIGI.
+  /// [from] Начало временного промежутка.
+  /// [to] Конец временного промежутка.
+  /// [interval] Интервал свечи.
+  Future<Result<CandlesResponse>> candles(
+      String figi, DateTime from, DateTime to, CandleResolution interval) {
+    return get(
+      (d) => CandlesResponse.fromJson(d),
+      path: 'candles',
+      params: <String, Object>{
+        'figi': figi,
+        'from': dateParam(from),
+        'to': dateParam(to),
+        'interval': interval.toJson(),
       },
     );
   }

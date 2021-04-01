@@ -305,3 +305,77 @@ class OrderbookMatcher extends Matcher {
     return true;
   }
 }
+
+class CandleMatcher extends Matcher {
+  final String figi;
+  final CandleResolution interval;
+  final double o;
+  final double c;
+  final double h;
+  final double l;
+  final int v;
+  final DateTime time;
+
+  CandleMatcher({
+    required this.figi,
+    required this.interval,
+    required this.o,
+    required this.c,
+    required this.h,
+    required this.l,
+    required this.v,
+    required this.time,
+  });
+
+  CandleMatcher.thirtyMin({
+    required this.figi,
+    required this.o,
+    required this.c,
+    required this.h,
+    required this.l,
+    required this.v,
+    required this.time,
+  }) : interval = CandleResolution.thirtyMin;
+
+  @override
+  Description describe(Description description) {
+    return description.add(
+        'Candle:<Candle(figi: $figi, interval: $interval, o: $o, c: $c, h: $h, '
+        'l: $l, v: $v, time: $time)>');
+  }
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    if (item is! Candle) return false;
+
+    return item.figi == figi &&
+        item.interval == interval &&
+        item.o == o &&
+        item.c == c &&
+        item.h == h &&
+        item.l == l &&
+        item.v == v &&
+        item.time == time;
+  }
+
+  @override
+  Description describeMismatch(Object? item, Description mismatchDescription,
+      Map matchState, bool verbose) {
+    if (item is! Candle) {
+      return mismatchDescription.add("is not an instance of 'Candle'");
+    }
+
+    final mismatch = <String>[
+      if (item.figi != figi) 'figi',
+      if (item.interval != interval) 'interval',
+      if (item.o != o) 'o',
+      if (item.c != c) 'c',
+      if (item.h != h) 'h',
+      if (item.l != l) 'l',
+      if (item.v != v) 'v',
+      if (item.time != time) 'time',
+    ];
+
+    return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
+  }
+}
