@@ -1,4 +1,7 @@
 export 'broker_account_type.dart';
+export 'candle_resolution.dart';
+export 'candle.dart';
+export 'candles.dart';
 export 'currencies.dart';
 export 'currency.dart';
 export 'currency_position.dart';
