@@ -361,4 +361,37 @@ void main() {
 
     // TODO: test fail
   });
+
+  group('searchByTicker()', () {
+    test('should return MarketInstrumentListResponse on success', () async {
+      const response =
+          '{"trackingId":"a418a6560fb00366","payload":{"instruments":[{"figi":"BBG00QPYJ5H0","ticker":"TCSG","isin":"TCS7238U2033","minPriceIncrement":0.2,"lot":1,"currency":"RUB","name":"TCS Group","type":"Stock"}],"total":1},"status":"Ok"}';
+      final endpoint = TIMarketEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.searchByTicker('TCSG');
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<MarketInstrumentListResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, 'a418a6560fb00366');
+      expect(data.status, 'Ok');
+      expect(data.payload.total, 1);
+      expect(data.payload.instruments.length, 1);
+
+      expect(
+          data.payload.instruments[0],
+          MarketInstrumentMatcher.stock(
+            figi: 'BBG00QPYJ5H0',
+            ticker: 'TCSG',
+            isin: 'TCS7238U2033',
+            minPriceIncrement: 0.2,
+            lot: 1,
+            currency: Currency.RUB,
+            name: 'TCS Group',
+          ));
+    });
+
+    // TODO: test fail
+  });
 }

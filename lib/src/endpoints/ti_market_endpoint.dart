@@ -82,4 +82,17 @@ class TIMarketEndpoint extends TIEndpoint {
       },
     );
   }
+
+  /// Получение инструмента по тикеру.
+  ///
+  /// [ticker] Тикер инструмента.
+  Future<Result<MarketInstrumentListResponse>> searchByTicker(String ticker) {
+    return get(
+      (d) => MarketInstrumentListResponse.fromJson(d),
+      path: 'search/by-ticker',
+      params: <String, Object>{
+        'ticker': ticker,
+      },
+    );
+  }
 }
