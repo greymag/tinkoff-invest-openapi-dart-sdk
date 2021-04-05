@@ -4,6 +4,7 @@ import 'package:tinkoff_invest/src/models/data/data.dart';
 import 'package:tinkoff_invest/src/models/response/candles_response.dart';
 import 'package:tinkoff_invest/src/models/response/market_instrument_list_response.dart';
 import 'package:tinkoff_invest/src/models/response/orderbook_response.dart';
+import 'package:tinkoff_invest/src/models/response/search_market_instrument_response.dart';
 
 import 'dio_mock.dart';
 import 'matchers.dart';
@@ -324,6 +325,37 @@ void main() {
             l: 58.21,
             v: 3,
             time: DateTime.utc(2021, 4, 1, 15, 30).toLocal(),
+          ));
+    });
+
+    // TODO: test fail
+  });
+
+  group('searchByFigi()', () {
+    test('should return SearchMarketInstrumentResponse on success', () async {
+      const response =
+          '{"trackingId":"632ae8281908df56","payload":{"figi":"BBG004S68758","ticker":"BANE","isin":"RU0007976957","minPriceIncrement":0.5,"lot":1,"currency":"RUB","name":"Башнефть","type":"Stock"},"status":"Ok"}';
+      final endpoint = TIMarketEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.searchByFigi('BBG004S68758');
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<SearchMarketInstrumentResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, '632ae8281908df56');
+      expect(data.status, 'Ok');
+
+      expect(
+          data.payload,
+          SearchMarketInstrumentMatcher.stock(
+            figi: 'BBG004S68758',
+            ticker: 'BANE',
+            isin: 'RU0007976957',
+            minPriceIncrement: 0.5,
+            lot: 1,
+            currency: Currency.RUB,
+            name: 'Башнефть',
           ));
     });
 

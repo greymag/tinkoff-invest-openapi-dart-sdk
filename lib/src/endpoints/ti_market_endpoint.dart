@@ -4,6 +4,7 @@ import 'package:tinkoff_invest/src/endpoints/ti_endpoint.dart';
 import 'package:tinkoff_invest/src/models/response/candles_response.dart';
 import 'package:tinkoff_invest/src/models/response/market_instrument_list_response.dart';
 import 'package:tinkoff_invest/src/models/response/orderbook_response.dart';
+import 'package:tinkoff_invest/src/models/response/search_market_instrument_response.dart';
 import 'package:tinkoff_invest/tinkoff_invest.dart';
 
 /// Endpoint /market
@@ -65,6 +66,19 @@ class TIMarketEndpoint extends TIEndpoint {
         'from': dateParam(from),
         'to': dateParam(to),
         'interval': interval.toJson(),
+      },
+    );
+  }
+
+  /// Получение инструмента по FIGI.
+  ///
+  /// [figi] FIGI.
+  Future<Result<SearchMarketInstrumentResponse>> searchByFigi(String figi) {
+    return get(
+      (d) => SearchMarketInstrumentResponse.fromJson(d),
+      path: 'search/by-figi',
+      params: <String, Object>{
+        'figi': figi,
       },
     );
   }

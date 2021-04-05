@@ -212,6 +212,111 @@ class MarketInstrumentMatcher extends Matcher {
   }
 }
 
+class SearchMarketInstrumentMatcher extends Matcher {
+  final String figi;
+  final String ticker;
+  final String? isin;
+  final double? minPriceIncrement;
+  final int lot;
+  final Currency? currency;
+  final String name;
+  final InstrumentType type;
+
+  SearchMarketInstrumentMatcher(
+      {required this.figi,
+      required this.ticker,
+      this.isin,
+      this.minPriceIncrement,
+      required this.lot,
+      this.currency,
+      required this.name,
+      required this.type});
+
+  SearchMarketInstrumentMatcher.stock(
+      {required this.figi,
+      required this.ticker,
+      this.isin,
+      this.minPriceIncrement,
+      required this.lot,
+      this.currency,
+      required this.name})
+      : type = InstrumentType.stock;
+
+  SearchMarketInstrumentMatcher.bond(
+      {required this.figi,
+      required this.ticker,
+      this.isin,
+      this.minPriceIncrement,
+      required this.lot,
+      this.currency,
+      required this.name})
+      : type = InstrumentType.bond;
+
+  SearchMarketInstrumentMatcher.etf(
+      {required this.figi,
+      required this.ticker,
+      this.isin,
+      this.minPriceIncrement,
+      required this.lot,
+      this.currency,
+      required this.name})
+      : type = InstrumentType.etf;
+
+  SearchMarketInstrumentMatcher.currency(
+      {required this.figi,
+      required this.ticker,
+      this.isin,
+      this.minPriceIncrement,
+      required this.lot,
+      this.currency,
+      required this.name})
+      : type = InstrumentType.currency;
+
+  @override
+  Description describe(Description description) {
+    return description.add(
+        'SearchMarketInstrument:<SearchMarketInstrument(figi: $figi, ticker: $ticker, '
+        'isin: $isin, minPriceIncrement: $minPriceIncrement, '
+        'lot: $lot, currency: $currency, name: $name, type: $type)>');
+  }
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    if (item is! SearchMarketInstrument) return false;
+
+    return item.figi == figi &&
+        item.ticker == ticker &&
+        item.isin == isin &&
+        item.minPriceIncrement == minPriceIncrement &&
+        item.lot == lot &&
+        item.currency == currency &&
+        item.name == name &&
+        item.type == type;
+  }
+
+  @override
+  Description describeMismatch(Object? item, Description mismatchDescription,
+      Map matchState, bool verbose) {
+    if (item is! SearchMarketInstrument) {
+      return mismatchDescription
+          .add("is not an instance of 'SearchMarketInstrument'");
+    }
+
+    final mismatch = <String>[
+      if (item.figi != figi) 'figi',
+      if (item.ticker != ticker) 'ticker',
+      if (item.isin != isin) 'isin',
+      if (item.minPriceIncrement != minPriceIncrement) 'minPriceIncrement',
+      if (item.lot != lot) 'lot',
+      if (item.currency != currency) 'currency',
+      if (item.name != name) 'name',
+      if (item.type != type) 'type',
+    ];
+
+    return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
+  }
+}
+
 class OrderbookMatcher extends Matcher {
   final String figi;
   final int depth;
