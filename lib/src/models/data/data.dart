@@ -21,3 +21,5 @@ export 'portfolio.dart';
 export 'sandbox_account.dart';
 export 'search_market_instrument.dart';
 export 'trade_status.dart';
+export 'user_account.dart';
+export 'user_accounts.dart';
