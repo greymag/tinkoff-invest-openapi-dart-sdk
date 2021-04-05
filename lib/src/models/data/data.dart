@@ -19,4 +19,5 @@ export 'operations.dart';
 export 'portfolio_position.dart';
 export 'portfolio.dart';
 export 'sandbox_account.dart';
+export 'search_market_instrument.dart';
 export 'trade_status.dart';
