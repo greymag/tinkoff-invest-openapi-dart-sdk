@@ -3,6 +3,7 @@ import 'package:tinkoff_invest/src/endpoints/ti_market_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_operations_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_portfolio_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_sandbox_endpoint.dart';
+import 'package:tinkoff_invest/src/endpoints/ti_user_endpoint.dart';
 
 /// Tinkoff Invest Open API client.
 ///
@@ -19,6 +20,7 @@ class TinkoffInvestApi {
   TIPortfolioEndpoint? _portfolioEndpoint;
   TIMarketEndpoint? _marketEndpoint;
   TIOperationsEndpoint? _operationsEndpoint;
+  TIUserEndpoint? _userEndpoint;
 
   TinkoffInvestApi(
     this.token, {
@@ -71,13 +73,16 @@ class TinkoffInvestApi {
   TIPortfolioEndpoint get portfolio =>
       _portfolioEndpoint ??= TIPortfolioEndpoint(_getDio());
 
-  /// Получении информации по бумагам.
+  /// Получение информации по бумагам.
   TIMarketEndpoint get market =>
       _marketEndpoint ??= TIMarketEndpoint(_getDio());
 
-  /// Получении информации по операциям.
+  /// Получение информации по операциям.
   TIOperationsEndpoint get operations =>
       _operationsEndpoint ??= TIOperationsEndpoint(_getDio());
+
+  /// Получение информации по брокерским счетам.
+  TIUserEndpoint get user => _userEndpoint ??= TIUserEndpoint(_getDio());
 }
 
 class TinkoffInvestApiConfig {

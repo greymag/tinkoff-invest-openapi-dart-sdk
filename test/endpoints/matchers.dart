@@ -484,3 +484,41 @@ class CandleMatcher extends Matcher {
     return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
   }
 }
+
+class UserAccountMatcher extends Matcher {
+  final BrokerAccountType brokerAccountType;
+  final String brokerAccountId;
+
+  UserAccountMatcher(
+      {required this.brokerAccountType, required this.brokerAccountId});
+
+  @override
+  Description describe(Description description) {
+    return description
+        .add('UserAccount:<UserAccount(brokerAccountType: $brokerAccountType, '
+            'brokerAccountId: $brokerAccountId)>');
+  }
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    if (item is! UserAccount) return false;
+
+    return item.brokerAccountType == brokerAccountType &&
+        item.brokerAccountId == brokerAccountId;
+  }
+
+  @override
+  Description describeMismatch(Object? item, Description mismatchDescription,
+      Map matchState, bool verbose) {
+    if (item is! UserAccount) {
+      return mismatchDescription.add("is not an instance of 'UserAccount'");
+    }
+
+    final mismatch = <String>[
+      if (item.brokerAccountType != brokerAccountType) 'brokerAccountType',
+      if (item.brokerAccountId != brokerAccountId) 'brokerAccountId',
+    ];
+
+    return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
+  }
+}
