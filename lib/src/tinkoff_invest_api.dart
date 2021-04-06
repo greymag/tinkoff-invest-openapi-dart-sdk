@@ -5,6 +5,8 @@ import 'package:tinkoff_invest/src/endpoints/ti_portfolio_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_sandbox_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_user_endpoint.dart';
 
+import 'endpoints/ti_orders_endpoint.dart';
+
 /// Tinkoff Invest Open API client.
 ///
 /// https://github.com/TinkoffCreditSystems/invest-openapi
@@ -17,6 +19,7 @@ class TinkoffInvestApi {
   Dio? _dio;
 
   TISandboxEndpoint? _sandboxEndpoint;
+  TIOrdersEndpoint? _ordersEndpoint;
   TIPortfolioEndpoint? _portfolioEndpoint;
   TIMarketEndpoint? _marketEndpoint;
   TIOperationsEndpoint? _operationsEndpoint;
@@ -68,6 +71,10 @@ class TinkoffInvestApi {
 
     return _sandboxEndpoint!;
   }
+
+  /// Операции заявок.
+  TIOrdersEndpoint get orders =>
+      _ordersEndpoint ??= TIOrdersEndpoint(_getDio());
 
   /// Операции с портфелем пользователя.
   TIPortfolioEndpoint get portfolio =>
