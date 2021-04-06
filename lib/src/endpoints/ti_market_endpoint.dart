@@ -9,7 +9,7 @@ import 'package:tinkoff_invest/tinkoff_invest.dart';
 
 /// Endpoint /market
 ///
-/// Получении информации по бумагам.
+/// Получение информации по бумагам.
 class TIMarketEndpoint extends TIEndpoint {
   TIMarketEndpoint(Dio dio) : super(dio, 'market');
 

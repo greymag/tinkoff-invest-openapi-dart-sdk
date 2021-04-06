@@ -7,9 +7,8 @@ import 'dio_mock.dart';
 import 'matchers.dart';
 
 void main() {
-  group('load()', () {
-    test('should return OperationsResponse on success with emty list',
-        () async {
+  group('accounts()', () {
+    test('should return UserAccountsResponse on success', () async {
       const response =
           '{"trackingId":"a075df5d357b192a","payload":{"accounts":[{"brokerAccountType":"Tinkoff","brokerAccountId":"SB1326498"}]},"status":"Ok"}';
       final endpoint = TIUserEndpoint(dioForSuccess(response));

@@ -7,7 +7,7 @@ import 'package:tinkoff_invest/src/models/response/sandbox_register_response.dar
 
 /// Endpoint /sandbox
 ///
-/// Операция в sandbox.
+/// Операции в sandbox.
 class TISandboxEndpoint extends TIEndpoint {
   TISandboxEndpoint(Dio dio) : super(dio, 'sandbox');
 

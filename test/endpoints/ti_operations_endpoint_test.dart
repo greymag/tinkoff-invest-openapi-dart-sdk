@@ -6,7 +6,7 @@ import 'dio_mock.dart';
 
 void main() {
   group('load()', () {
-    test('should return OperationsResponse on success with emty list',
+    test('should return OperationsResponse on success with empty list',
         () async {
       const response =
           '{"trackingId":"e36882cda702ae7f","payload":{"operations":[]},"status":"Ok"}';
