@@ -14,6 +14,7 @@ export 'order_status.dart';
 export 'order_type.dart';
 export 'order.dart';
 export 'orderbook.dart';
+export 'placed_limit_order.dart';
 export 'operation_status.dart';
 export 'operation_trade.dart';
 export 'operation_type_with_commission.dart';
