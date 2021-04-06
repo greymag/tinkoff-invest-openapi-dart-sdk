@@ -522,3 +522,200 @@ class UserAccountMatcher extends Matcher {
     return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
   }
 }
+
+class OrderMatcher extends Matcher {
+  final String orderId;
+  final String figi;
+  final OperationType operation;
+  final OrderStatus status;
+  final int requestedLots;
+  final int executedLots;
+  final OrderType type;
+  final double price;
+
+  OrderMatcher(
+      {required this.orderId,
+      required this.figi,
+      required this.operation,
+      required this.status,
+      required this.requestedLots,
+      required this.executedLots,
+      required this.type,
+      required this.price});
+
+  OrderMatcher.buy(
+      {required this.orderId,
+      required this.figi,
+      required this.status,
+      required this.requestedLots,
+      required this.executedLots,
+      required this.type,
+      required this.price})
+      : operation = OperationType.buy;
+
+  OrderMatcher.sell(
+      {required this.orderId,
+      required this.figi,
+      required this.status,
+      required this.requestedLots,
+      required this.executedLots,
+      required this.type,
+      required this.price})
+      : operation = OperationType.sell;
+
+  OrderMatcher.limit(
+      {required this.orderId,
+      required this.figi,
+      required this.operation,
+      required this.status,
+      required this.requestedLots,
+      required this.executedLots,
+      required this.price})
+      : type = OrderType.limit;
+
+  OrderMatcher.market(
+      {required this.orderId,
+      required this.figi,
+      required this.operation,
+      required this.status,
+      required this.requestedLots,
+      required this.executedLots,
+      required this.price})
+      : type = OrderType.market;
+
+  @override
+  Description describe(Description description) {
+    return description.add(
+        'Order:<Order(orderId: $orderId, figi: $figi, operation: $operation, '
+        'status: $status, requestedLots: $requestedLots, '
+        'executedLots: $executedLots, type: $type, price: $price)>');
+  }
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    if (item is! Order) return false;
+
+    return item.orderId == orderId &&
+        item.figi == figi &&
+        item.operation == operation &&
+        item.status == status &&
+        item.requestedLots == requestedLots &&
+        item.executedLots == executedLots &&
+        item.type == type &&
+        item.price == price;
+  }
+
+  @override
+  Description describeMismatch(Object? item, Description mismatchDescription,
+      Map matchState, bool verbose) {
+    if (item is! Order) {
+      return mismatchDescription.add("is not an instance of 'Order'");
+    }
+
+    final mismatch = <String>[
+      if (item.orderId != orderId) 'orderId',
+      if (item.figi != figi) 'figi',
+      if (item.operation != operation) 'operation',
+      if (item.status != status) 'status',
+      if (item.requestedLots != requestedLots) 'requestedLots',
+      if (item.executedLots != executedLots) 'executedLots',
+      if (item.type != type) 'type',
+      if (item.price != price) 'price',
+    ];
+
+    return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
+  }
+}
+
+class PlacedLimitOrderMatcher extends Matcher {
+  final String orderId;
+  final OperationType operation;
+  final OrderStatus status;
+  final String? rejectReason;
+  final String? message;
+  final int requestedLots;
+  final int executedLots;
+  final MoneyAmount? commission;
+
+  PlacedLimitOrderMatcher(
+      {required this.orderId,
+      required this.operation,
+      required this.status,
+      this.rejectReason,
+      this.message,
+      required this.requestedLots,
+      required this.executedLots,
+      this.commission});
+
+  PlacedLimitOrderMatcher.buy(
+      {required this.orderId,
+      required this.status,
+      this.rejectReason,
+      this.message,
+      required this.requestedLots,
+      required this.executedLots,
+      this.commission})
+      : operation = OperationType.buy;
+
+  PlacedLimitOrderMatcher.sell(
+      {required this.orderId,
+      required this.status,
+      this.rejectReason,
+      this.message,
+      required this.requestedLots,
+      required this.executedLots,
+      this.commission})
+      : operation = OperationType.sell;
+
+  @override
+  Description describe(Description description) {
+    return description.add(
+        'PlacedLimitOrder:<PlacedLimitOrder(orderId: $orderId, operation: $operation, '
+        'status: $status, rejectReason: $rejectReason, message: $message, '
+        'requestedLots: $requestedLots, executedLots: $executedLots, '
+        'commission: $commission)>');
+  }
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    if (item is! PlacedLimitOrder) return false;
+
+    return item.orderId == orderId &&
+        item.operation == operation &&
+        item.status == status &&
+        item.rejectReason == rejectReason &&
+        item.message == message &&
+        item.requestedLots == requestedLots &&
+        item.executedLots == executedLots &&
+        _isMoneyAmountEquals(item.commission, commission);
+  }
+
+  @override
+  Description describeMismatch(Object? item, Description mismatchDescription,
+      Map matchState, bool verbose) {
+    if (item is! PlacedLimitOrder) {
+      return mismatchDescription
+          .add("is not an instance of 'PlacedLimitOrder'");
+    }
+
+    final mismatch = <String>[
+      if (item.orderId != orderId) 'orderId',
+      if (item.operation != operation) 'operation',
+      if (item.status != status) 'status',
+      if (item.rejectReason != rejectReason) 'rejectReason',
+      if (item.executedLots != executedLots) 'executedLots',
+      if (item.requestedLots != requestedLots) 'requestedLots',
+      if (item.executedLots != executedLots) 'executedLots',
+      if (_isMoneyAmountEquals(item.commission, commission)) 'commission',
+    ];
+
+    return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
+  }
+
+  bool _isMoneyAmountEquals(MoneyAmount? a, MoneyAmount? b) {
+    if (a == null) return b == null;
+    if (b == null) return false;
+
+    return a.currency == b.currency && a.value == b.value;
+  }
+}
