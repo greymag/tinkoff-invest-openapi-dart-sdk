@@ -33,4 +33,7 @@ extension FromJsonExtension on Map<String, dynamic> {
   List<T> requireList<T>(
           String key, T Function(Map<String, dynamic> data) itemFromJson) =>
       listFromJson(this, key, itemFromJson);
+
+  T? optional<T>(String key, T Function(Map<String, dynamic> data) fromJson) =>
+      this[key] != null ? fromJson(this[key] as Map<String, dynamic>) : null;
 }
