@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_orders_endpoint.dart';
 import 'package:tinkoff_invest/src/models/data/data.dart';
+import 'package:tinkoff_invest/src/models/response/empty_response.dart';
 import 'package:tinkoff_invest/src/models/response/limit_order_response.dart';
 import 'package:tinkoff_invest/src/models/response/market_order_response.dart';
 import 'package:tinkoff_invest/src/models/response/orders_response.dart';
@@ -26,7 +27,7 @@ void main() {
       expect(data.payload.isEmpty, true);
     });
 
-    // TODO: test with not empty rrsponse
+    // TODO: test with not empty response
 
     // TODO: test brokerAccountId param
 
@@ -58,9 +59,7 @@ void main() {
           ));
     });
 
-    // TODO: test with not empty rrsponse
-
-    // TODO: test brokerAccountId param
+    // TODO: test params
 
     test('should return ErrorResponse on fail', () async {
       const response =
@@ -107,9 +106,7 @@ void main() {
           ));
     });
 
-    // TODO: test with not empty rrsponse
-
-    // TODO: test brokerAccountId param
+    // TODO: test params
 
     test('should return ErrorResponse on fail', () async {
       const response =
@@ -127,6 +124,38 @@ void main() {
             message:
                 'Cannot process request, not enough balance on security=USD',
             code: 'NOT_ENOUGH_BALANCE',
+          ));
+    });
+  });
+
+  group('cancel()', () {
+    test('should return empty response on success', () async {
+      const response =
+          '{"trackingId":"61cb1f0496add949","payload":{},"status":"Ok"}';
+      final endpoint = TIOrdersEndpoint(dioForSuccess(response));
+
+      final res = await endpoint.cancel('ed9c5925-2202-4dca-9471-4391dc6b8ca5');
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<EmptyResponse>());
+    });
+
+    // TODO: test brokerAccountId param
+
+    test('should return ErrorResponse on fail', () async {
+      const response =
+          '{"trackingId":"3b8f216ac284ab51","payload":{"message":"Cannot find order by id someId","code":"ORDER_ERROR"},"status":"Error"}';
+      final endpoint = TIOrdersEndpoint(dioForError(response));
+
+      final res = await endpoint.cancel('someId');
+
+      expect(res.isValue, false);
+      expect(
+          res.asError!.error,
+          ErrorResponseMatcher(
+            trackingId: '3b8f216ac284ab51',
+            message: 'Cannot find order by id someId',
+            code: 'ORDER_ERROR',
           ));
     });
   });
