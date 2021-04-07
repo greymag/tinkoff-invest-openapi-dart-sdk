@@ -703,10 +703,101 @@ class PlacedLimitOrderMatcher extends Matcher {
       if (item.operation != operation) 'operation',
       if (item.status != status) 'status',
       if (item.rejectReason != rejectReason) 'rejectReason',
-      if (item.executedLots != executedLots) 'executedLots',
       if (item.requestedLots != requestedLots) 'requestedLots',
       if (item.executedLots != executedLots) 'executedLots',
-      if (_isMoneyAmountEquals(item.commission, commission)) 'commission',
+      if (!_isMoneyAmountEquals(item.commission, commission)) 'commission',
+    ];
+
+    return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");
+  }
+
+  bool _isMoneyAmountEquals(MoneyAmount? a, MoneyAmount? b) {
+    if (a == null) return b == null;
+    if (b == null) return false;
+
+    return a.currency == b.currency && a.value == b.value;
+  }
+}
+
+class PlacedMarketOrderMatcher extends Matcher {
+  final String orderId;
+  final OperationType operation;
+  final OrderStatus status;
+  final String? rejectReason;
+  final String? message;
+  final int requestedLots;
+  final int executedLots;
+  final MoneyAmount? commission;
+
+  PlacedMarketOrderMatcher(
+      {required this.orderId,
+      required this.operation,
+      required this.status,
+      this.rejectReason,
+      this.message,
+      required this.requestedLots,
+      required this.executedLots,
+      this.commission});
+
+  PlacedMarketOrderMatcher.buy(
+      {required this.orderId,
+      required this.status,
+      this.rejectReason,
+      this.message,
+      required this.requestedLots,
+      required this.executedLots,
+      this.commission})
+      : operation = OperationType.buy;
+
+  PlacedMarketOrderMatcher.sell(
+      {required this.orderId,
+      required this.status,
+      this.rejectReason,
+      this.message,
+      required this.requestedLots,
+      required this.executedLots,
+      this.commission})
+      : operation = OperationType.sell;
+
+  @override
+  Description describe(Description description) {
+    return description.add(
+        'PlacedMarketOrder:<PlacedMarketOrder(orderId: $orderId, operation: $operation, '
+        'status: $status, rejectReason: $rejectReason, message: $message, '
+        'requestedLots: $requestedLots, executedLots: $executedLots, '
+        'commission: $commission)>');
+  }
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    if (item is! PlacedMarketOrder) return false;
+
+    return item.orderId == orderId &&
+        item.operation == operation &&
+        item.status == status &&
+        item.rejectReason == rejectReason &&
+        item.message == message &&
+        item.requestedLots == requestedLots &&
+        item.executedLots == executedLots &&
+        _isMoneyAmountEquals(item.commission, commission);
+  }
+
+  @override
+  Description describeMismatch(Object? item, Description mismatchDescription,
+      Map matchState, bool verbose) {
+    if (item is! PlacedMarketOrder) {
+      return mismatchDescription
+          .add("is not an instance of 'PlacedMarketOrder'");
+    }
+
+    final mismatch = <String>[
+      if (item.orderId != orderId) 'orderId',
+      if (item.operation != operation) 'operation',
+      if (item.status != status) 'status',
+      if (item.rejectReason != rejectReason) 'rejectReason',
+      if (item.requestedLots != requestedLots) 'requestedLots',
+      if (item.executedLots != executedLots) 'executedLots',
+      if (!_isMoneyAmountEquals(item.commission, commission)) 'commission',
     ];
 
     return mismatchDescription.add("Has mismatched ${mismatch.join(', ')}");

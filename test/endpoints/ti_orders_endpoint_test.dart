@@ -2,6 +2,7 @@ import 'package:test/test.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_orders_endpoint.dart';
 import 'package:tinkoff_invest/src/models/data/data.dart';
 import 'package:tinkoff_invest/src/models/response/limit_order_response.dart';
+import 'package:tinkoff_invest/src/models/response/market_order_response.dart';
 import 'package:tinkoff_invest/src/models/response/orders_response.dart';
 
 import 'dio_mock.dart';
@@ -66,13 +67,63 @@ void main() {
           '{"trackingId":"165f91f3d8b373a9","payload":{"message":"Cannot process request, not enough balance on security=USD","code":"NOT_ENOUGH_BALANCE"},"status":"Error"}';
       final endpoint = TIOrdersEndpoint(dioForError(response));
 
-      final res = await endpoint.load();
+      final res =
+          await endpoint.limitOrder('BBG000BPL8G3', OperationType.buy, 100, 1);
 
       expect(res.isValue, false);
       expect(
           res.asError!.error,
           ErrorResponseMatcher(
             trackingId: '165f91f3d8b373a9',
+            message:
+                'Cannot process request, not enough balance on security=USD',
+            code: 'NOT_ENOUGH_BALANCE',
+          ));
+    });
+  });
+
+  group('marketOrder()', () {
+    test('should return PlacedLimitOrder on success', () async {
+      const response =
+          '{"trackingId":"c03b657045275cd1","payload":{"orderId":"ed9c5925-2202-4dca-9471-4391dc6b8ca5","operation":"Sell","status":"New","requestedLots":1,"executedLots":0},"status":"Ok"}';
+      final endpoint = TIOrdersEndpoint(dioForSuccess(response));
+
+      final res =
+          await endpoint.marketOrder('BBG000BPL8G3', OperationType.sell, 1);
+
+      expect(res.isValue, true);
+      expect(res.asValue!.value, isA<MarketOrderResponse>());
+
+      final data = res.asValue!.value;
+      expect(data.trackingId, 'c03b657045275cd1');
+      expect(data.status, 'Ok');
+      expect(
+          data.payload,
+          PlacedMarketOrderMatcher.sell(
+            orderId: 'ed9c5925-2202-4dca-9471-4391dc6b8ca5',
+            status: OrderStatus.newOrder,
+            requestedLots: 1,
+            executedLots: 0,
+          ));
+    });
+
+    // TODO: test with not empty rrsponse
+
+    // TODO: test brokerAccountId param
+
+    test('should return ErrorResponse on fail', () async {
+      const response =
+          '{"trackingId":"339943d55416a483","payload":{"message":"Cannot process request, not enough balance on security=USD","code":"NOT_ENOUGH_BALANCE"},"status":"Error"}';
+      final endpoint = TIOrdersEndpoint(dioForError(response));
+
+      final res =
+          await endpoint.marketOrder('BBG000BPL8G3', OperationType.buy, 1);
+
+      expect(res.isValue, false);
+      expect(
+          res.asError!.error,
+          ErrorResponseMatcher(
+            trackingId: '339943d55416a483',
             message:
                 'Cannot process request, not enough balance on security=USD',
             code: 'NOT_ENOUGH_BALANCE',
