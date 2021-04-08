@@ -1,7 +1,9 @@
 import 'from_json.dart';
 import 'candle_resolution.dart';
 
+/// Структура свечи.
 class Candle {
+  /// FIGI.
   final String figi;
 
   /// Интервал свечи.
@@ -9,11 +11,22 @@ class Candle {
   /// Интервал также определяет допустимый промежуток запроса.
   final CandleResolution interval;
 
+  /// Цена открытия.
   final double o;
+
+  /// Цена закрытия.
   final double c;
+
+  /// Наибольшая цена.
   final double h;
+
+  /// Наименьшая цена.
   final double l;
+
+  /// Объем торгов.
   final int v;
+
+  /// Время.
   final DateTime time;
 
   Candle(this.figi, this.interval, this.o, this.c, this.h, this.l, this.v,
