@@ -4,6 +4,7 @@ import 'package:tinkoff_invest/src/endpoints/ti_operations_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_portfolio_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_sandbox_endpoint.dart';
 import 'package:tinkoff_invest/src/endpoints/ti_user_endpoint.dart';
+import 'package:tinkoff_invest/src/streaming/ti_streaming.dart';
 
 import 'endpoints/ti_orders_endpoint.dart';
 
@@ -17,6 +18,7 @@ class TinkoffInvestApi {
   final bool debug;
 
   Dio? _dio;
+  TIStreaming? _streaming;
 
   TISandboxEndpoint? _sandboxEndpoint;
   TIOrdersEndpoint? _ordersEndpoint;
@@ -71,6 +73,10 @@ class TinkoffInvestApi {
 
     return _sandboxEndpoint!;
   }
+
+  /// Streaming market-data.
+  TIStreaming get streaming => _streaming ??=
+      TIStreaming(config.productionStreamingUrl, token, debug: debug);
 
   /// Операции заявок.
   TIOrdersEndpoint get orders =>
