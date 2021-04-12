@@ -1,4 +1,4 @@
-import 'from_json.dart';
+import '../from_json.dart';
 import 'candle_resolution.dart';
 
 /// Структура свечи.

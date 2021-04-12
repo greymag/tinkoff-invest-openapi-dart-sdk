@@ -1,5 +1,5 @@
 import 'data.dart';
-import 'from_json.dart';
+import '../from_json.dart';
 
 class MarketInstrument {
   final String figi;

@@ -1,5 +1,5 @@
 import 'package:tinkoff_invest/src/models/data/data.dart';
-import 'package:tinkoff_invest/src/models/data/from_json.dart';
+import 'package:tinkoff_invest/src/models/from_json.dart';
 
 import 'response.dart';
 

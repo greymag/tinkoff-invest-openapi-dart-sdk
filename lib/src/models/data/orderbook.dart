@@ -1,4 +1,4 @@
-import 'from_json.dart';
+import '../from_json.dart';
 
 import 'order_response.dart';
 import 'trade_status.dart';

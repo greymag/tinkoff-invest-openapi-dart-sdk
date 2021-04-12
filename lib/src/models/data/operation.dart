@@ -1,5 +1,5 @@
 import 'currency.dart';
-import 'from_json.dart';
+import '../from_json.dart';
 import 'instrument_type.dart';
 import 'money_amount.dart';
 import 'operation_status.dart';

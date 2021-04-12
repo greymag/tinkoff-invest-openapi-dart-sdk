@@ -1,4 +1,4 @@
-import 'from_json.dart';
+import '../from_json.dart';
 import 'user_account.dart';
 
 class UserAccounts {

@@ -1,6 +1,6 @@
 import 'candle.dart';
 import 'candle_resolution.dart';
-import 'from_json.dart';
+import '../from_json.dart';
 
 class Candles {
   final String figi;

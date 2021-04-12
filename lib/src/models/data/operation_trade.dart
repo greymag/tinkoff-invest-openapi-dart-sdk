@@ -1,4 +1,4 @@
-import 'from_json.dart';
+import '../from_json.dart';
 
 class OperationTrade {
   final String tradeId;

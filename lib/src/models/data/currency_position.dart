@@ -1,5 +1,5 @@
 import 'currency.dart';
-import 'from_json.dart';
+import '../from_json.dart';
 
 class CurrencyPosition {
   final Currency currency;

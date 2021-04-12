@@ -1,5 +1,5 @@
 import 'market_instrument.dart';
-import 'from_json.dart';
+import '../from_json.dart';
 
 class MarketInstrumentList {
   final int total;
