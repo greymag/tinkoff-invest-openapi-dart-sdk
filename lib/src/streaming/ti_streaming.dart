@@ -1,34 +1,42 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:tinkoff_invest/src/streaming/ti_candle_streaming.dart';
 import 'package:tinkoff_invest/src/streaming/ti_streaming_channel.dart';
 import 'package:web_socket_channel/io.dart';
 
 /// Обертка для работы по протоколу streaming.
 class TIStreaming {
-  late IOWebSocketChannel _channel;
+  late IOWebSocketChannel _socket;
   late StreamSubscription _subscription;
   final bool _debug;
 
   final Set<TIStreamingChannel> _channels = {};
+
+  TICandleStreamingImpl? _candle;
+
   TIStreaming(String url, String token, {bool debug = false}) : _debug = debug {
-    _channel = IOWebSocketChannel.connect(
+    _socket = IOWebSocketChannel.connect(
       url,
       headers: <String, Object>{
         'Authorization': 'Bearer $token',
       },
     );
 
-    _subscription = _channel.stream.listen(
+    _subscription = _socket.stream.listen(
       _onEvent,
       onError: _onError,
       onDone: _onDone,
     );
   }
 
+  /// Свечи.
+  TICandleStreaming get candle =>
+      _candle ??= _add(TICandleStreamingImpl(_socket.sink));
+
   void dispose() {
     _subscription.cancel();
-    if (_channel.closeCode == null) _channel.sink.close();
+    if (_socket.closeCode == null) _socket.sink.close();
   }
 
   void _onEvent(dynamic event) {
