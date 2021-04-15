@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:tinkoff_invest/src/streaming/ti_candle_streaming.dart';
+import 'package:tinkoff_invest/src/streaming/ti_orderbook_streaming.dart';
 import 'package:tinkoff_invest/src/streaming/ti_streaming_channel.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -14,6 +15,7 @@ class TIStreaming {
   final Set<TIStreamingChannel> _channels = {};
 
   TICandleStreamingImpl? _candle;
+  TIOrderbookStreamingImpl? _orderbook;
 
   TIStreaming(String url, String token, {bool debug = false}) : _debug = debug {
     _socket = IOWebSocketChannel.connect(
@@ -33,6 +35,10 @@ class TIStreaming {
   /// Свечи.
   TICandleStreaming get candle =>
       _candle ??= _add(TICandleStreamingImpl(_socket.sink));
+
+  /// Стакан.
+  TIOrderbookStreaming get orderbook =>
+      _orderbook ??= _add(TIOrderbookStreamingImpl(_socket.sink));
 
   void dispose() {
     _subscription.cancel();
