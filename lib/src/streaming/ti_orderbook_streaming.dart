@@ -11,6 +11,9 @@ abstract class TIOrderbookStreaming {
   /// Отписка от стакана.
   ///
   /// Если [listener] не указан, будут отписаны все слушатели.
+  ///
+  /// [depth] определяет глубину стакана.
+  /// Может принимать значения от 0 до 20 включая: `0 < depth <= 20`.
   void unsubscribe(String figi, int depth,
       [void Function(StreamingOrderbookEvent event)? listener]);
 }
@@ -23,6 +26,7 @@ class TIOrderbookStreamingImpl
   @override
   void subscribe(String figi, int depth,
       void Function(StreamingOrderbookEvent event) listener) {
+    assert(depth > 0 && depth <= 20);
     subscribeWith(
       {
         'figi': figi,
