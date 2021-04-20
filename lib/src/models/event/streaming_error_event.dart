@@ -1,0 +1,18 @@
+import 'package:tinkoff_invest/src/models/from_json.dart';
+import 'package:tinkoff_invest/src/models/event/streaming_event.dart';
+import 'package:tinkoff_invest/src/models/streaming/streaming.dart';
+
+class StreamingErrorEvent extends StreamingEvent<StreamingError> {
+  StreamingErrorEvent(String event, DateTime time, StreamingError payload)
+      : super(event, time, payload);
+
+  factory StreamingErrorEvent.fromJson(Map<String, dynamic> data) =>
+      StreamingErrorEvent(
+        data['event'] as String,
+        data.requireDateTime('time'),
+        StreamingError.fromJson(data['payload'] as Map<String, dynamic>),
+      );
+
+  @override
+  String toString() => defaultToString('StreamingErrorEvent');
+}
