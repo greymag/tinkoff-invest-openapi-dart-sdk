@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:tinkoff_invest/src/models/event/streaming_error_event.dart';
 import 'package:tinkoff_invest/src/streaming/ti_candle_streaming.dart';
 import 'package:tinkoff_invest/src/streaming/ti_instrument_info_streaming.dart';
 import 'package:tinkoff_invest/src/streaming/ti_orderbook_streaming.dart';
@@ -17,6 +18,19 @@ abstract class TIStreaming {
 
   /// Информация об инструменте.
   TIInstrumentInfoStreaming get instrumentInfo;
+
+  /// Устанавливает обработчик ошибок.
+  ///
+  /// [listener] вызовется, если от сервиса пришла ошибка.
+  /// Ошибка может приходить например в случае,
+  /// если попытались подписаться на несуществующий инструмент
+  /// (передали некорректный FIGI).
+  /// См. https://tinkoffcreditsystems.github.io/invest-openapi/marketdata/#_3
+  ///
+  /// Если обработчик уже был установлен - он будут перезаписать.
+  ///
+  /// Если вы хотите сбросить обработчик - просто передайте `null`.
+  void onError(void Function(StreamingErrorEvent event)? listener);
 }
 
 abstract class TIStreamingConnection {
@@ -24,6 +38,9 @@ abstract class TIStreamingConnection {
 }
 
 class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
+  static const _eventNameField = 'event';
+  static const _errorEventName = 'error';
+
   late IOWebSocketChannel _socket;
   late StreamSubscription _subscription;
   final bool _debug;
@@ -33,6 +50,8 @@ class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
   TICandleStreamingImpl? _candle;
   TIOrderbookStreamingImpl? _orderbook;
   TIInstrumentInfoStreamingImpl? _instrumentInfo;
+
+  void Function(StreamingErrorEvent event)? _errorListener;
 
   TIStreamingImpl(String url, String token, {bool debug = false})
       : _debug = debug {
@@ -67,6 +86,11 @@ class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
   }
 
   @override
+  void onError(void Function(StreamingErrorEvent event)? listener) {
+    _errorListener = listener;
+  }
+
+  @override
   void send(String data) {
     if (_debug) _log('Send: $data');
     _socket.sink.add(data);
@@ -75,9 +99,19 @@ class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
   void _onEvent(dynamic event) {
     if (_debug) _log('Event: $event');
 
-    if (event is String && _channels.isNotEmpty) {
+    if (event is String) {
       final data = jsonDecode(event) as Map<String, dynamic>;
-      _channels.forEach((channel) => channel.eventReceived(data));
+      final eventName = data[_eventNameField] as String?;
+      if (eventName == _errorEventName) {
+        final listener = _errorListener;
+        if (listener != null) {
+          listener(StreamingErrorEvent.fromJson(data));
+        }
+      } else if (eventName != null) {
+        _channels.forEach((channel) => channel.eventReceived(eventName, data));
+      } else {
+        assert(false, 'Event name is not defined. Received: $event');
+      }
     }
   }
 

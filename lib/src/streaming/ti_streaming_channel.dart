@@ -8,12 +8,11 @@ import 'ti_streaming.dart';
 typedef EventFilter<T> = bool Function(T payload);
 
 abstract class TIStreamingChannel {
-  void eventReceived(Map<String, dynamic> data);
+  void eventReceived(String eventName, Map<String, dynamic> data);
 }
 
 abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
     implements TIStreamingChannel {
-  static const _eventNameField = 'event';
   static const _subscribeEvent = 'subscribe';
   static const _unsubscribeEvent = 'unsubscribe';
 
@@ -29,8 +28,8 @@ abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
   TIStreamingChannelImpl(this.name, this.connection);
 
   @override
-  void eventReceived(Map<String, dynamic> data) {
-    if (data[_eventNameField] == name) {
+  void eventReceived(String eventName, Map<String, dynamic> data) {
+    if (eventName == name) {
       final event = fromMap(data);
       final payload = event.payload;
       _filters2Listeners.forEach((key, map) {
