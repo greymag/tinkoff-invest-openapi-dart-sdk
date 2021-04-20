@@ -8,7 +8,22 @@ import 'package:tinkoff_invest/src/streaming/ti_streaming_channel.dart';
 import 'package:web_socket_channel/io.dart';
 
 /// Обертка для работы по протоколу streaming.
-class TIStreaming {
+abstract class TIStreaming {
+  /// Свечи.
+  TICandleStreaming get candle;
+
+  /// Стакан.
+  TIOrderbookStreaming get orderbook;
+
+  /// Информация об инструменте.
+  TIInstrumentInfoStreaming get instrumentInfo;
+}
+
+abstract class TIStreamingConnection {
+  void send(String data);
+}
+
+class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
   late IOWebSocketChannel _socket;
   late StreamSubscription _subscription;
   final bool _debug;
@@ -19,7 +34,8 @@ class TIStreaming {
   TIOrderbookStreamingImpl? _orderbook;
   TIInstrumentInfoStreamingImpl? _instrumentInfo;
 
-  TIStreaming(String url, String token, {bool debug = false}) : _debug = debug {
+  TIStreamingImpl(String url, String token, {bool debug = false})
+      : _debug = debug {
     _socket = IOWebSocketChannel.connect(
       url,
       headers: <String, Object>{
@@ -34,21 +50,26 @@ class TIStreaming {
     );
   }
 
-  /// Свечи.
-  TICandleStreaming get candle =>
-      _candle ??= _add(TICandleStreamingImpl(_socket.sink));
+  @override
+  TICandleStreaming get candle => _candle ??= _add(TICandleStreamingImpl(this));
 
-  /// Стакан.
+  @override
   TIOrderbookStreaming get orderbook =>
-      _orderbook ??= _add(TIOrderbookStreamingImpl(_socket.sink));
+      _orderbook ??= _add(TIOrderbookStreamingImpl(this));
 
-  /// Информация об инструменте.
+  @override
   TIInstrumentInfoStreaming get instrumentInfo =>
-      _instrumentInfo ??= _add(TIInstrumentInfoStreamingImpl(_socket.sink));
+      _instrumentInfo ??= _add(TIInstrumentInfoStreamingImpl(this));
 
   void dispose() {
     _subscription.cancel();
     if (_socket.closeCode == null) _socket.sink.close();
+  }
+
+  @override
+  void send(String data) {
+    if (_debug) _log('Send: $data');
+    _socket.sink.add(data);
   }
 
   void _onEvent(dynamic event) {

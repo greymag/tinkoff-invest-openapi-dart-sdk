@@ -1,7 +1,8 @@
 import 'package:tinkoff_invest/src/models/event/streaming_orderbook_event.dart';
 import 'package:tinkoff_invest/src/models/streaming/streaming.dart';
 import 'package:tinkoff_invest/src/streaming/ti_streaming_channel.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'ti_streaming.dart';
 
 abstract class TIOrderbookStreaming {
   /// Подписка на стакан.
@@ -32,7 +33,8 @@ abstract class TIOrderbookStreaming {
 class TIOrderbookStreamingImpl
     extends TIStreamingChannelImpl<StreamingOrderbook, StreamingOrderbookEvent>
     implements TIOrderbookStreaming {
-  TIOrderbookStreamingImpl(WebSocketSink sink) : super('orderbook', sink);
+  TIOrderbookStreamingImpl(TIStreamingConnection connection)
+      : super('orderbook', connection);
 
   @override
   void subscribe(String figi, int depth,

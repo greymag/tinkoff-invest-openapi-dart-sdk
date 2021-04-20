@@ -1,7 +1,8 @@
 import 'package:tinkoff_invest/src/models/event/streaming_candle_event.dart';
 import 'package:tinkoff_invest/src/models/streaming/streaming.dart';
 import 'package:tinkoff_invest/src/streaming/ti_streaming_channel.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'ti_streaming.dart';
 
 abstract class TICandleStreaming {
   /// Подписка на свечи.
@@ -25,7 +26,8 @@ abstract class TICandleStreaming {
 class TICandleStreamingImpl
     extends TIStreamingChannelImpl<StreamingCandle, StreamingCandleEvent>
     implements TICandleStreaming {
-  TICandleStreamingImpl(WebSocketSink sink) : super('candle', sink);
+  TICandleStreamingImpl(TIStreamingConnection connection)
+      : super('candle', connection);
 
   @override
   void subscribe(String figi, StreamingCandleInterval interval,

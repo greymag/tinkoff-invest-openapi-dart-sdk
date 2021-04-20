@@ -18,7 +18,7 @@ class TinkoffInvestApi {
   final bool debug;
 
   Dio? _dio;
-  TIStreaming? _streaming;
+  TIStreamingImpl? _streaming;
 
   TISandboxEndpoint? _sandboxEndpoint;
   TIOrdersEndpoint? _ordersEndpoint;
@@ -76,7 +76,7 @@ class TinkoffInvestApi {
 
   /// Streaming market-data.
   TIStreaming get streaming => _streaming ??=
-      TIStreaming(config.productionStreamingUrl, token, debug: debug);
+      TIStreamingImpl(config.productionStreamingUrl, token, debug: debug);
 
   /// Операции заявок.
   TIOrdersEndpoint get orders =>

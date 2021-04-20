@@ -1,7 +1,8 @@
 import 'package:tinkoff_invest/src/models/event/streaming_instrument_info_event.dart';
 import 'package:tinkoff_invest/src/models/streaming/streaming.dart';
 import 'package:tinkoff_invest/src/streaming/ti_streaming_channel.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'ti_streaming.dart';
 
 abstract class TIInstrumentInfoStreaming {
   /// Подписка на информацию об инструменте.
@@ -26,8 +27,8 @@ abstract class TIInstrumentInfoStreaming {
 class TIInstrumentInfoStreamingImpl extends TIStreamingChannelImpl<
     StreamingInstrumentInfo,
     StreamingInstrumentInfoEvent> implements TIInstrumentInfoStreaming {
-  TIInstrumentInfoStreamingImpl(WebSocketSink sink)
-      : super('instrument_info', sink);
+  TIInstrumentInfoStreamingImpl(TIStreamingConnection connection)
+      : super('instrument_info', connection);
 
   @override
   void subscribe(

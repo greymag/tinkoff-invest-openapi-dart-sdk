@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:meta/meta.dart';
 import 'package:tinkoff_invest/src/models/event/streaming_event.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'ti_streaming.dart';
 
 typedef EventFilter<T> = bool Function(T payload);
 
@@ -17,7 +18,7 @@ abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
   static const _unsubscribeEvent = 'unsubscribe';
 
   @protected
-  final WebSocketSink sink;
+  final TIStreamingConnection connection;
 
   @protected
   final String name;
@@ -25,7 +26,7 @@ abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
   final Map<String, Set<Function>> _listeners = {};
   final Map<String, Map<EventFilter<T>, Function>> _filters2Listeners = {};
 
-  TIStreamingChannelImpl(this.name, this.sink);
+  TIStreamingChannelImpl(this.name, this.connection);
 
   @override
   void eventReceived(Map<String, dynamic> data) {
@@ -114,7 +115,7 @@ abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
   @protected
   void send(Map<String, Object> data) {
     final json = jsonEncode(data);
-    sink.add(json);
+    connection.send(json);
   }
 
   String _getKey(Map<String, Object> params) => jsonEncode(params);
