@@ -50,6 +50,7 @@ abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
     Map<String, Object> params,
     void Function(E event) listener,
     EventFilter<T> filter,
+    String? requestId,
   ) {
     final key = _getKey(params);
     final listeners = _listeners[key] ??= {};
@@ -63,7 +64,7 @@ abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
       }
 
       if (needSubscription) {
-        sendEvent(_subscribeEvent, params);
+        sendEvent(_subscribeEvent, params, requestId: requestId);
       }
     }
   }
@@ -72,6 +73,7 @@ abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
   void unsubscribeWith(
     Map<String, Object> params,
     void Function(E event)? listener,
+    String? requestId,
   ) {
     final key = _getKey(params);
     final listeners = _listeners[key];
@@ -88,16 +90,25 @@ abstract class TIStreamingChannelImpl<T, E extends StreamingEvent<T>>
       }
 
       if (listeners.isEmpty) {
-        sendEvent(_unsubscribeEvent, params);
+        sendEvent(_unsubscribeEvent, params, requestId: requestId);
       }
     }
   }
 
   @protected
-  void sendEvent(String event, Map<String, Object> data) {
-    send({
+  void sendEvent(String event, Map<String, Object> params,
+      {String? requestId}) {
+    final data = <String, Object>{
       'event': '$name:$event',
-    }..addAll(data));
+    };
+
+    data.addAll(params);
+
+    if (requestId != null) {
+      data['request_id'] = requestId;
+    }
+
+    send(data);
   }
 
   @protected

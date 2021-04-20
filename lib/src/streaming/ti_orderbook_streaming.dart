@@ -5,8 +5,15 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 abstract class TIOrderbookStreaming {
   /// Подписка на стакан.
+  ///
+  /// [depth] определяет глубину стакана.
+  /// Может принимать значения от 0 до 20 включая: `0 < depth <= 20`.
+  ///
+  /// Можно указать произвольный [requestId], который будет использован
+  /// в сообщении об ошибке, если она произойдет.
   void subscribe(String figi, int depth,
-      void Function(StreamingOrderbookEvent event) listener);
+      void Function(StreamingOrderbookEvent event) listener,
+      [String? requestId]);
 
   /// Отписка от стакана.
   ///
@@ -14,8 +21,12 @@ abstract class TIOrderbookStreaming {
   ///
   /// [depth] определяет глубину стакана.
   /// Может принимать значения от 0 до 20 включая: `0 < depth <= 20`.
+  ///
+  /// Можно указать произвольный [requestId], который будет использован
+  /// в сообщении об ошибке, если она произойдет.
   void unsubscribe(String figi, int depth,
-      [void Function(StreamingOrderbookEvent event)? listener]);
+      [void Function(StreamingOrderbookEvent event)? listener,
+      String? requestId]);
 }
 
 class TIOrderbookStreamingImpl
@@ -25,7 +36,8 @@ class TIOrderbookStreamingImpl
 
   @override
   void subscribe(String figi, int depth,
-      void Function(StreamingOrderbookEvent event) listener) {
+      void Function(StreamingOrderbookEvent event) listener,
+      [String? requestId]) {
     assert(depth > 0 && depth <= 20);
     subscribeWith(
       {
@@ -34,18 +46,22 @@ class TIOrderbookStreamingImpl
       },
       listener,
       (d) => d.figi == figi && d.depth == depth,
+      requestId,
     );
   }
 
   @override
   void unsubscribe(String figi, int depth,
-      [void Function(StreamingOrderbookEvent event)? listener]) {
+      [void Function(StreamingOrderbookEvent event)? listener,
+      String? requestId]) {
+    assert(depth > 0 && depth <= 20);
     unsubscribeWith(
       {
         'figi': figi,
         'depth': depth,
       },
       listener,
+      requestId,
     );
   }
 

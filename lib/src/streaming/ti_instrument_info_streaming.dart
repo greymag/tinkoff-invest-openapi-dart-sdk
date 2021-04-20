@@ -5,14 +5,22 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 abstract class TIInstrumentInfoStreaming {
   /// Подписка на информацию об инструменте.
+  ///
+  /// Можно указать произвольный [requestId], который будет использован
+  /// в сообщении об ошибке, если она произойдет.
   void subscribe(
-      String figi, void Function(StreamingInstrumentInfoEvent event) listener);
+      String figi, void Function(StreamingInstrumentInfoEvent event) listener,
+      [String? requestId]);
 
   /// Отписка от информации об инструменте.
   ///
   /// Если [listener] не указан, будут отписаны все слушатели.
+  ///
+  /// Можно указать произвольный [requestId], который будет использован
+  /// в сообщении об ошибке, если она произойдет.
   void unsubscribe(String figi,
-      [void Function(StreamingInstrumentInfoEvent event)? listener]);
+      [void Function(StreamingInstrumentInfoEvent event)? listener,
+      String? requestId]);
 }
 
 class TIInstrumentInfoStreamingImpl extends TIStreamingChannelImpl<
@@ -23,24 +31,28 @@ class TIInstrumentInfoStreamingImpl extends TIStreamingChannelImpl<
 
   @override
   void subscribe(
-      String figi, void Function(StreamingInstrumentInfoEvent event) listener) {
+      String figi, void Function(StreamingInstrumentInfoEvent event) listener,
+      [String? requestId]) {
     subscribeWith(
       {
         'figi': figi,
       },
       listener,
       (d) => d.figi == figi,
+      requestId,
     );
   }
 
   @override
   void unsubscribe(String figi,
-      [void Function(StreamingInstrumentInfoEvent event)? listener]) {
+      [void Function(StreamingInstrumentInfoEvent event)? listener,
+      String? requestId]) {
     unsubscribeWith(
       {
         'figi': figi,
       },
       listener,
+      requestId,
     );
   }
 

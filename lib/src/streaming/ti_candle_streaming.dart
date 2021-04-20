@@ -5,14 +5,21 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 abstract class TICandleStreaming {
   /// Подписка на свечи.
+  ///
+  /// Можно указать произвольный [requestId], который будет использован
+  /// в сообщении об ошибке, если она произойдет.
   void subscribe(String figi, StreamingCandleInterval interval,
-      void Function(StreamingCandleEvent event) listener);
+      void Function(StreamingCandleEvent event) listener,
+      [String? requestId]);
 
   /// Отписка от свечей.
   ///
   /// Если [listener] не указан, будут отписаны все слушатели.
+  ///
+  /// Можно указать произвольный [requestId], который будет использован
+  /// в сообщении об ошибке, если она произойдет.
   void unsubscribe(String figi, StreamingCandleInterval interval,
-      [void Function(StreamingCandleEvent event)? listener]);
+      [void Function(StreamingCandleEvent event)? listener, String? requestId]);
 }
 
 class TICandleStreamingImpl
@@ -22,7 +29,8 @@ class TICandleStreamingImpl
 
   @override
   void subscribe(String figi, StreamingCandleInterval interval,
-      void Function(StreamingCandleEvent event) listener) {
+      void Function(StreamingCandleEvent event) listener,
+      [String? requestId]) {
     subscribeWith(
       {
         'figi': figi,
@@ -30,18 +38,21 @@ class TICandleStreamingImpl
       },
       listener,
       (d) => d.figi == figi && d.interval == interval,
+      requestId,
     );
   }
 
   @override
   void unsubscribe(String figi, StreamingCandleInterval interval,
-      [void Function(StreamingCandleEvent event)? listener]) {
+      [void Function(StreamingCandleEvent event)? listener,
+      String? requestId]) {
     unsubscribeWith(
       {
         'figi': figi,
         'interval': interval.toJson(),
       },
       listener,
+      requestId,
     );
   }
 
