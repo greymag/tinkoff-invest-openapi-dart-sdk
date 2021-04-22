@@ -1,17 +1,18 @@
 import 'instrument_type.dart';
 import 'money_amount.dart';
+import '../from_json.dart';
 
 class PortfolioPosition {
   final String figi;
-  final String ticker;
-  final String isin;
+  final String? ticker;
+  final String? isin;
   final InstrumentType instrumentType;
   final double balance;
-  final double blocked;
-  final MoneyAmount expectedYield;
+  final double? blocked;
+  final MoneyAmount? expectedYield;
   final int lots;
-  final MoneyAmount averagePositionPrice;
-  final MoneyAmount averagePositionPriceNoNkd;
+  final MoneyAmount? averagePositionPrice;
+  final MoneyAmount? averagePositionPriceNoNkd;
   final String name;
 
   PortfolioPosition(
@@ -30,18 +31,17 @@ class PortfolioPosition {
   factory PortfolioPosition.fromJson(Map<String, dynamic> data) =>
       PortfolioPosition(
         data['figi'] as String,
-        data['ticker'] as String,
-        data['isin'] as String,
+        data['ticker'] as String?,
+        data['isin'] as String?,
         const InstrumentTypeConverter()
             .convert(data['instrumentType'] as String),
-        data['balance'] as double,
-        data['blocked'] as double,
-        MoneyAmount.fromJson(data['expectedYield'] as Map<String, dynamic>),
+        data.requireDouble('balance'),
+        data.optionalDouble('blocked'),
+        data.optional('expectedYield', (d) => MoneyAmount.fromJson(d)),
         data['lots'] as int,
-        MoneyAmount.fromJson(
-            data['averagePositionPrice'] as Map<String, dynamic>),
-        MoneyAmount.fromJson(
-            data['averagePositionPriceNoNkd'] as Map<String, dynamic>),
+        data.optional('averagePositionPrice', (d) => MoneyAmount.fromJson(d)),
+        data.optional(
+            'averagePositionPriceNoNkd', (d) => MoneyAmount.fromJson(d)),
         data['name'] as String,
       );
 
