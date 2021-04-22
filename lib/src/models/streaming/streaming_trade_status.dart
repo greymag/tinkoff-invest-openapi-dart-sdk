@@ -54,12 +54,12 @@ class StreamingTradeStatusConverter {
       _data.keys.firstWhere((e) => _data[e] == value);
 }
 
-StreamingTradeStatus tradeStatusFromJson(Map<String, dynamic> data,
+StreamingTradeStatus streamingTradeStatusFromJson(Map<String, dynamic> data,
         [String key = _defaultTradeStatusKey]) =>
     const StreamingTradeStatusConverter().fromJson(data, key);
 
-extension TradeStatusFromJsonExtension on Map<String, dynamic> {
-  StreamingTradeStatus requireTradeStatus(
+extension StreamingTradeStatusFromJsonExtension on Map<String, dynamic> {
+  StreamingTradeStatus requireStreamingTradeStatus(
           [String key = _defaultTradeStatusKey]) =>
       const StreamingTradeStatusConverter().fromJson(this, key);
 }

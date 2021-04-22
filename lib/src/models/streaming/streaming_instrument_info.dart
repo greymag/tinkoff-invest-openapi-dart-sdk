@@ -37,7 +37,7 @@ class StreamingInstrumentInfo {
   factory StreamingInstrumentInfo.fromJson(Map<String, dynamic> map) {
     return StreamingInstrumentInfo(
       map['figi'] as String,
-      map.requireTradeStatus(),
+      map.requireStreamingTradeStatus(),
       map.requireDouble('min_price_increment'),
       map.requireDouble('lot'),
       map.optionalDouble('accrued_interest'),
