@@ -4,6 +4,10 @@ import '../from_json.dart';
 class MarketInstrument {
   final String figi;
   final String ticker;
+
+  /// Международный идентификационный код ценной бумаги (ISIN).
+  ///
+  /// См. https://en.wikipedia.org/wiki/International_Securities_Identification_Number
   final String? isin;
 
   /// Шаг цены.
