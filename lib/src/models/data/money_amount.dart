@@ -1,4 +1,5 @@
 import 'currency.dart';
+import '../from_json.dart';
 
 class MoneyAmount {
   final Currency currency;
@@ -8,7 +9,7 @@ class MoneyAmount {
 
   factory MoneyAmount.fromJson(Map<String, dynamic> data) => MoneyAmount(
         currencyFromJson(data),
-        data['value'] as double,
+        data.requireDouble('value'),
       );
 
   @override
