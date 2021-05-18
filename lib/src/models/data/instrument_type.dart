@@ -1,5 +1,9 @@
 enum InstrumentType { stock, currency, bond, etf }
 
+extension InstrumentTypeExtension on InstrumentType {
+  String get name => toString().split('.').last;
+}
+
 const _defaultInstrumentTypeKey = 'instrumentType';
 
 class InstrumentTypeConverter {
