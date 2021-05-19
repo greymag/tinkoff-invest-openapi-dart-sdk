@@ -28,3 +28,7 @@ extension TradeStatusFromJsonExtension on Map<String, dynamic> {
   TradeStatus requireTradeStatus([String key = _defaultTradeStatusKey]) =>
       const TradeStatusConverter().fromJson(this, key);
 }
+
+extension TradeStatusExtension on TradeStatus {
+  String get name => toString().split('.').last;
+}

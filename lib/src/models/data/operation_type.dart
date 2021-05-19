@@ -30,5 +30,7 @@ extension OperationTypeFromJsonExtension on Map<String, dynamic> {
 }
 
 extension OperationTypeExtension on OperationType {
+  String get name => toString().split('.').last;
+
   String toJson() => const OperationTypeConverter().toJson(this);
 }

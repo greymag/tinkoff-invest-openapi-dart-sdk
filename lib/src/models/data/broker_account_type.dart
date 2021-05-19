@@ -5,6 +5,10 @@ enum BrokerAccountType {
   tinkoffIis,
 }
 
+extension BrokerAccountTypeExtension on BrokerAccountType {
+  String get name => toString().split('.').last;
+}
+
 class BrokerAccountTypeConverter {
   static const _data = {
     'Tinkoff': BrokerAccountType.tinkoff,

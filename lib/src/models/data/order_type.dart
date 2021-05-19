@@ -30,5 +30,7 @@ extension OrderTypeFromJsonExtension on Map<String, dynamic> {
 }
 
 extension OrderTypeExtension on OrderType {
+  String get name => toString().split('.').last;
+
   String toJson() => const OrderTypeConverter().toJson(this);
 }

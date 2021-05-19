@@ -1,3 +1,5 @@
+- `name` getters for enums.
+
 ## 0.1.0-dev.2 - 2021-05-18
 
 - Full SDK implementation.

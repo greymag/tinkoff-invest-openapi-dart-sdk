@@ -77,5 +77,7 @@ extension CandleResolutionFromJsonExtension on Map<String, dynamic> {
 }
 
 extension CandleResolutionExtension on CandleResolution {
+  String get name => toString().split('.').last;
+
   String toJson() => const CandleResolutionConverter().toJson(this);
 }

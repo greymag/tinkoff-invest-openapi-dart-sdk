@@ -87,5 +87,7 @@ extension CandleIntervalFromJsonExtension on Map<String, dynamic> {
 }
 
 extension CandleIntervalExtension on StreamingCandleInterval {
+  String get name => toString().split('.').last;
+
   String toJson() => const StreamingCandleIntervalConverter().toJson(this);
 }

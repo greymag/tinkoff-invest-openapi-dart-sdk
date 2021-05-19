@@ -36,5 +36,7 @@ extension CurrencyFromJsonExtension on Map<String, dynamic> {
 }
 
 extension CurrencyExtension on Currency {
+  String get name => toString().split('.').last;
+
   String toJson() => const CurrencyConverter().toJson(this);
 }

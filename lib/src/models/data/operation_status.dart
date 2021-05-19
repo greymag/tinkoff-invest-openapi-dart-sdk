@@ -26,3 +26,7 @@ extension OperationStatusFromJsonExtension on Map<String, dynamic> {
   OperationStatus requireOperationStatus([String key = _defaultStatusKey]) =>
       const OperationStatusConverter().fromJson(this, key);
 }
+
+extension OperationStatusExtension on OperationStatus {
+  String get name => toString().split('.').last;
+}

@@ -74,3 +74,7 @@ extension OperationTypeWithCommissionFromJsonExtension on Map<String, dynamic> {
           ? const OperationTypeWithCommissionConverter().fromJson(this, key)
           : null;
 }
+
+extension OperationTypeWithCommissionExtension on OperationTypeWithCommission {
+  String get name => toString().split('.').last;
+}

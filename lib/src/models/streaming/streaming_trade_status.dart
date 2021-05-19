@@ -65,5 +65,7 @@ extension StreamingTradeStatusFromJsonExtension on Map<String, dynamic> {
 }
 
 extension StreamingTradeStatusExtension on StreamingTradeStatus {
+  String get name => toString().split('.').last;
+
   String toJson() => const StreamingTradeStatusConverter().toJson(this);
 }

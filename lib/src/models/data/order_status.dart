@@ -47,5 +47,7 @@ extension OrderStatusFromJsonExtension on Map<String, dynamic> {
 }
 
 extension OrderStatusExtension on OrderStatus {
+  String get name => toString().split('.').last;
+
   String toJson() => const OrderStatusConverter().toJson(this);
 }
