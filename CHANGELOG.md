@@ -1,3 +1,7 @@
+## 0.1.0-dev.3 - 2021-05-24
+
+- Make version stable.
+
 ## 0.1.0-dev.3 - 2021-05-19
 
 - `name` getters for enums.
