@@ -11,7 +11,7 @@ class Operation {
 
   /// Статус заявки.
   final OperationStatus status;
-  final List<OperationTrade> trades;
+  final List<OperationTrade>? trades;
   final MoneyAmount? commission;
   final Currency currency;
   final double payment;
@@ -49,7 +49,7 @@ class Operation {
     return Operation(
       map['id'] as String,
       map.requireOperationStatus(),
-      map.requireList('trades', (x) => OperationTrade.fromJson(x)),
+      map.optionalList('trades', (x) => OperationTrade.fromJson(x)),
       map['commission'] != null
           ? MoneyAmount.fromJson(map['commission'] as Map<String, dynamic>)
           : null,

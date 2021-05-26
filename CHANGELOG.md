@@ -1,4 +1,8 @@
-## 0.1.0-dev.3 - 2021-05-24
+## 0.1.0+1 - 2021-05-26
+
+- **Fixed** Require optional field `trades` for `Operation`.
+
+## 0.1.0 - 2021-05-24
 
 - Make version stable.
 

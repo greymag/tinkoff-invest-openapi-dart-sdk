@@ -1,6 +1,6 @@
 name: tinkoff_invest
 description: Tinkoff Invest OpenAPI SDK for Dart.
-version: 0.1.0
+version: 0.1.0+1
 repository: https://github.com/greymag/tinkoff-invest-openapi-dart-sdk
 issue_tracker: https://github.com/greymag/tinkoff-invest-openapi-dart-sdk/issues
 
