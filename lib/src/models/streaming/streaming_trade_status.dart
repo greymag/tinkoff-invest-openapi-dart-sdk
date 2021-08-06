@@ -27,6 +27,9 @@ enum StreamingTradeStatus {
 
   /// Торги по цене аукциона закрытия.
   tradingAtClosingAuctionPrice,
+
+  /// ! Нет описания в документации !
+  openingAuction,
 }
 
 class StreamingTradeStatusConverter {
@@ -40,6 +43,7 @@ class StreamingTradeStatusConverter {
     'opening_period': StreamingTradeStatus.openingPeriod,
     'trading_at_closing_auction_price':
         StreamingTradeStatus.tradingAtClosingAuctionPrice,
+    'opening_auction': StreamingTradeStatus.openingAuction,
   };
 
   const StreamingTradeStatusConverter();
