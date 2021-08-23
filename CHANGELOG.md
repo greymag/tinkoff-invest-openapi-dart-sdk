@@ -1,3 +1,7 @@
+## 0.1.1 - 2021-08-23
+
+- Configurable connection timeout.
+
 ## 0.1.0+2 - 2021-08-06
 
 - **Fixed** Crash on instrument info event with status `opening_auction`.

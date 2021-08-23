@@ -39,7 +39,7 @@ class TinkoffInvestApi {
     if (res == null) {
       final options = BaseOptions(
         baseUrl: sandboxMode ? config.sandboxRestUrl : config.productionRestUrl,
-        connectTimeout: const Duration(seconds: 3).inMilliseconds,
+        connectTimeout: config.connectTimeout.inMilliseconds,
         headers: <String, Object>{
           'Authorization': 'Bearer $token',
         },
@@ -102,11 +102,13 @@ class TinkoffInvestApiConfig {
   final String productionRestUrl;
   final String productionStreamingUrl;
   final String sandboxRestUrl;
+  final Duration connectTimeout;
 
   const TinkoffInvestApiConfig({
     this.productionRestUrl = 'https://api-invest.tinkoff.ru/openapi/',
     this.productionStreamingUrl =
         'wss://api-invest.tinkoff.ru/openapi/md/v1/md-openapi/ws/',
     this.sandboxRestUrl = 'https://api-invest.tinkoff.ru/openapi/sandbox/',
+    this.connectTimeout = const Duration(seconds: 3),
   });
 }
