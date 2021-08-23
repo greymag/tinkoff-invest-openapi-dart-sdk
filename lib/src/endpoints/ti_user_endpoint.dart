@@ -9,7 +9,7 @@ import 'package:tinkoff_invest/src/models/response/user_accounts_response.dart';
 class TIUserEndpoint extends TIEndpoint {
   TIUserEndpoint(Dio dio) : super(dio, 'user');
 
-  /// Получение списка акций.
+  /// Получение списка счетов.
   Future<Result<UserAccountsResponse>> accounts() {
     return get((d) => UserAccountsResponse.fromJson(d), path: 'accounts');
   }
