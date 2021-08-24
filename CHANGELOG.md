@@ -1,3 +1,7 @@
+## 0.1.1+1 - 2021-08-24
+
+- **Fixed**: Disconnect from streaming after a while.
+
 ## 0.1.1 - 2021-08-23
 
 - Configurable connection timeout.

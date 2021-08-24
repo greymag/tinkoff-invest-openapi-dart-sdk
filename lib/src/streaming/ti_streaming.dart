@@ -60,6 +60,7 @@ class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
       headers: <String, Object>{
         'Authorization': 'Bearer $token',
       },
+      pingInterval: const Duration(minutes: 2),
     );
 
     _subscription = _socket.stream.listen(
