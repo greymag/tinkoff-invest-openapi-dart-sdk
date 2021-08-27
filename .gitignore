@@ -11,3 +11,6 @@ build/
 
 # Directory created by dartdoc
 doc/api/
+
+# VS Code settings
+.vscode/settings.json
