@@ -2,21 +2,30 @@ import '../from_json.dart';
 import 'money_amount.dart';
 import 'operation_type.dart';
 import 'order_status.dart';
+import 'placed_order.dart';
 
-class PlacedMarketOrder {
+class PlacedMarketOrder implements PlacedOrder {
+  @override
   final String orderId;
+  @override
   final OperationType operation;
 
   /// Статус заявки.
+  @override
   final OrderStatus status;
+  @override
   final String? rejectReason;
 
   /// Сообщение об ошибке.
+  @override
   final String? message;
 
+  @override
   final int requestedLots;
+  @override
   final int executedLots;
 
+  @override
   final MoneyAmount? commission;
 
   PlacedMarketOrder(
@@ -41,6 +50,9 @@ class PlacedMarketOrder {
       map.optional('commission', (d) => MoneyAmount.fromJson(d)),
     );
   }
+
+  @override
+  PlacedOrderType get orderType => PlacedOrderType.market;
 
   @override
   String toString() {

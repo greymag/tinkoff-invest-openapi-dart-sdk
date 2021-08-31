@@ -1,3 +1,7 @@
+## 0.1.2 - 2021-08-31
+
+* Unified interface `PlacedOrder` for `PlacedMarketOrder` and `PlacedLimitOrder`.
+
 ## 0.1.1+1 - 2021-08-24
 
 - **Fixed**: Disconnect from streaming after a while.
