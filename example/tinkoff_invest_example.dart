@@ -89,7 +89,7 @@ Future<void> main() async {
     return;
   }
 
-  // Покупаем Акции Тинькофф
+  // Покупаем Акции Apple
   final orderRes = await api.orders.limitOrder(figi, OperationType.buy, 100, 1);
   if (orderRes.isValue) {
     final placedOrder = orderRes.asValue!.value.payload;
