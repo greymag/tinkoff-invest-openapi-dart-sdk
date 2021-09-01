@@ -122,6 +122,9 @@ class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
 
   void _onDone() {
     _log('Done');
+    if (_debug && _socket.closeReason != null) {
+      _log('Reason: ${_socket.closeReason} [${_socket.closeCode}]');
+    }
   }
 
   void _log(String message) {
