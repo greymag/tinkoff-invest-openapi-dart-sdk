@@ -31,6 +31,12 @@ abstract class TIStreaming {
   ///
   /// Если вы хотите сбросить обработчик - просто передайте `null`.
   void onError(void Function(StreamingErrorEvent event)? listener);
+
+  /// Устанавливает обработчик завершения потока.
+  ///
+  /// [listener] вызовется если поток был закрыт или
+  /// перван по какой-то еще причине.
+  void onDone(void Function()? listener);
 }
 
 abstract class TIStreamingConnection {
@@ -52,6 +58,7 @@ class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
   TIInstrumentInfoStreamingImpl? _instrumentInfo;
 
   void Function(StreamingErrorEvent event)? _errorListener;
+  void Function()? _doneListener;
 
   TIStreamingImpl(String url, String token, {bool debug = false})
       : _debug = debug {
@@ -92,6 +99,11 @@ class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
   }
 
   @override
+  void onDone(void Function()? listener) {
+    _doneListener = listener;
+  }
+
+  @override
   void send(String data) {
     if (_debug) _log('Send: $data');
     _socket.sink.add(data);
@@ -121,10 +133,14 @@ class TIStreamingImpl implements TIStreaming, TIStreamingConnection {
   }
 
   void _onDone() {
-    _log('Done');
-    if (_debug && _socket.closeReason != null) {
-      _log('Reason: ${_socket.closeReason} [${_socket.closeCode}]');
+    if (_debug) {
+      _log('Done');
+      if (_socket.closeReason != null) {
+        _log('Reason: ${_socket.closeReason} [${_socket.closeCode}]');
+      }
     }
+
+    _doneListener?.call();
   }
 
   void _log(String message) {

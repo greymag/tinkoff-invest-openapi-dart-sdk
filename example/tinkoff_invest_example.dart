@@ -151,6 +151,11 @@ Future<void> main() async {
     print('Error: ${event.payload}');
   });
 
+  // Подпишемся на завершение потока
+  api.streaming.onDone(() {
+    print('Streaming done');
+  });
+
   api.streaming.candle.subscribe(
     figi,
     StreamingCandleInterval.fiveMin,

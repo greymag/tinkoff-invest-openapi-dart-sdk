@@ -1,3 +1,7 @@
+## 0.1.3 - 2021-09-01
+
+* Added `onDone` listener for streaming.
+
 ## 0.1.2 - 2021-08-31
 
 * Unified interface `PlacedOrder` for `PlacedMarketOrder` and `PlacedLimitOrder`.
