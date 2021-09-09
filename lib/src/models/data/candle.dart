@@ -45,6 +45,21 @@ class Candle {
     );
   }
 
+  /// Цена открытия.
+  double get open => o;
+
+  /// Цена закрытия.
+  double get close => c;
+
+  /// Наибольшая цена.
+  double get high => h;
+
+  /// Наименьшая цена.
+  double get low => l;
+
+  /// Объем торгов.
+  int get volume => v;
+
   @override
   String toString() {
     return 'Candle(figi: $figi, interval: $interval, o: $o, c: $c, h: $h, '
